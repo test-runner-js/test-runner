@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-'use strict'
 const path = require('path')
 const commandLineArgs = require('command-line-args')
 const commandLineUsage = require('command-line-usage')
@@ -21,6 +20,7 @@ if (options.help) {
     }
   ]))
 } else {
+  /* implement glob expansion */
   if (options.files && options.files.length) {
     options.files.forEach(file => require(path.resolve(process.cwd(), file)))
   }
