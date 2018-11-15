@@ -1,4 +1,5 @@
 const TestRunner = require('test-runner')
+const yaml = require('js-yaml')
 
 class TAPView {
   start (count) {
@@ -9,8 +10,16 @@ class TAPView {
     console.log(`ok ${test.id} ${test.name} ${result || ''}`)
   }
   testFail (test, err) {
+    const error = {
+      operator: err.operator,
+      expected: err.expected,
+      actual: err.actual,
+      stack: err.stack,
+    }
     console.log(`not ok ${test.id} ${test.name}`)
-    console.log(err)
+    console.log('  ---')
+    console.log(yaml.safeDump(error).split('\n').map(l => l ? '  ' + l : '').join('\n'))
+    console.log('  ...')
   }
   testSkip (test) {
     console.log(`ok ${test.id} ${test.name} # SKIP`)
