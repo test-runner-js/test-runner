@@ -20,8 +20,18 @@ if (options.help) {
     }
   ]))
 } else {
-  /* implement glob expansion */
   if (options.files && options.files.length) {
-    options.files.forEach(file => require(path.resolve(process.cwd(), file)))
+    const arrayify = require('array-back')
+    const globs = options.files
+    const FileSet = require('file-set')
+    const path = require('path')
+    const flatten = require('reduce-flatten')
+    return globs
+      .map(glob => {
+        const fileSet = new FileSet(glob)
+        return fileSet.files.map(file => require(path.resolve(process.cwd(), file)))
+      })
+      .reduce(flatten, [])
+
   }
 }

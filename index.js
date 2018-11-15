@@ -26,5 +26,6 @@ class TAPView {
   }
 }
 const runner = new TestRunner({ view: new TAPView() })
+// const runner = new TestRunner()
 
 module.exports = runner
