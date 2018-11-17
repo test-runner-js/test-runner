@@ -7,25 +7,27 @@ class TAPView {
     console.log(`1..${count}`)
   }
   testPass (test, result) {
-    console.log(`ok ${test.id} ${test.name} ${result || ''}`)
+    console.log(`ok ${test.index} ${test.name} ${result || ''}`)
   }
   testFail (test, err) {
-    const error = {
-      operator: err.operator,
-      expected: err.expected,
-      actual: err.actual,
-      stack: err.stack,
-    }
-    console.log(`not ok ${test.id} ${test.name}`)
+    const error = Object.assign({}, err)
+    // const error = err.code === 'ERR_ASSERTION'
+    //   ? {
+    //     operator: err.operator,
+    //     expected: err.expected,
+    //     actual: err.actual,
+    //     stack: err.stack,
+    //   }
+    //   : err
+    console.log(`not ok ${test.index} ${test.name}`)
     console.log('  ---')
-    console.log(yaml.safeDump(error).split('\n').map(l => l ? '  ' + l : '').join('\n'))
+    console.log(yaml.safeDump(error, { skipInvalid: true }).split('\n').map(l => l ? '  ' + l : '').join('\n'))
     console.log('  ...')
+    process.exitCode = 1
   }
   testSkip (test) {
-    console.log(`ok ${test.id} ${test.name} # SKIP`)
+    console.log(`ok ${test.index} ${test.name} # SKIP`)
   }
 }
-const runner = new TestRunner({ view: new TAPView() })
-// const runner = new TestRunner()
 
-module.exports = runner
+module.exports = new TestRunner({ view: new TAPView() })

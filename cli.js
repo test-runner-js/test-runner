@@ -25,13 +25,9 @@ if (options.help) {
     const globs = options.files
     const FileSet = require('file-set')
     const path = require('path')
-    const flatten = require('reduce-flatten')
-    return globs
-      .map(glob => {
-        const fileSet = new FileSet(glob)
-        return fileSet.files.map(file => require(path.resolve(process.cwd(), file)))
-      })
-      .reduce(flatten, [])
-
+    for (const glob of globs) {
+      const fileSet = new FileSet(glob)
+      return fileSet.files.map(file => require(path.resolve(process.cwd(), file)))
+    }
   }
 }
