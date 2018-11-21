@@ -7,7 +7,7 @@ class TAPView {
     console.log(`1..${count}`)
   }
   testPass (test, result) {
-    console.log(`ok ${test.index} ${test.name} ${result || ''}`)
+    console.log(`ok ${test.name} ${result || ''}`)
   }
   testFail (test, err) {
     const error = Object.assign({}, err)
@@ -19,14 +19,14 @@ class TAPView {
     //     stack: err.stack,
     //   }
     //   : err
-    console.log(`not ok ${test.index} ${test.name}`)
+    console.log(`not ok ${test.name}`)
     console.log('  ---')
     console.log(yaml.safeDump(error, { skipInvalid: true }).split('\n').map(l => l ? '  ' + l : '').join('\n'))
     console.log('  ...')
     process.exitCode = 1
   }
   testSkip (test) {
-    console.log(`ok ${test.index} ${test.name} # SKIP`)
+    console.log(`ok ${test.name} # SKIP`)
   }
 }
 

@@ -21,13 +21,21 @@ if (options.help) {
   ]))
 } else {
   if (options.files && options.files.length) {
-    const arrayify = require('array-back')
-    const globs = options.files
     const FileSet = require('file-set')
     const path = require('path')
-    for (const glob of globs) {
-      const fileSet = new FileSet(glob)
-      return fileSet.files.map(file => require(path.resolve(process.cwd(), file)))
+    const flatten = require('reduce-flatten')
+    const files = options.files
+      .map(glob => {
+        const fileSet = new FileSet(glob)
+        return fileSet.files
+      })
+      .reduce(flatten, [])
+    if (files.length) {
+      for (const file of files) {
+        require(path.resolve(process.cwd(), file))
+      }
+    } else {
+      console.log('NO FILES')
     }
   }
 }
