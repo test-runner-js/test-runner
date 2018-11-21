@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 const path = require('path')
 const commandLineArgs = require('command-line-args')
-const commandLineUsage = require('command-line-usage')
 
 const options = commandLineArgs([
   { name: 'files', type: String, multiple: true, defaultOption: true },
@@ -9,6 +8,7 @@ const options = commandLineArgs([
 ])
 
 if (options.help) {
+  const commandLineUsage = require('command-line-usage')
   console.log(commandLineUsage([
     {
       header: 'test-runner',
@@ -31,8 +31,20 @@ if (options.help) {
       })
       .reduce(flatten, [])
     if (files.length) {
+      const TAPView = require('./view-tap')
+      const runners = []
       for (const file of files) {
-        require(path.resolve(process.cwd(), file))
+        const runner = require(path.resolve(process.cwd(), file))
+        runners.push(runner)
+        runner.view = new TAPView()
+      }
+      if (runners.some(r => r.tests.some(t => t.only))) {
+        for (const runner of runners) {
+          for (const test of runner.tests) {
+            if (!test.only) test.skip = true
+          }
+          runner.start()
+        }
       }
     } else {
       console.log('NO FILES')

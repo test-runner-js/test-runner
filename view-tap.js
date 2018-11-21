@@ -1,6 +1,3 @@
-const TestRunner = require('test-runner')
-const yaml = require('js-yaml')
-
 class TAPView {
   start (count) {
     console.log('TAP version 13')
@@ -10,6 +7,7 @@ class TAPView {
     console.log(`ok ${test.name} ${result || ''}`)
   }
   testFail (test, err) {
+    const yaml = require('js-yaml')
     const error = Object.assign({}, err)
     // const error = err.code === 'ERR_ASSERTION'
     //   ? {
@@ -30,4 +28,4 @@ class TAPView {
   }
 }
 
-module.exports = new TestRunner({ view: new TAPView() })
+module.exports = TAPView
