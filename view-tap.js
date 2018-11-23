@@ -9,14 +9,6 @@ class TAPView {
   testFail (test, err) {
     const yaml = require('js-yaml')
     const error = Object.assign({}, err)
-    // const error = err.code === 'ERR_ASSERTION'
-    //   ? {
-    //     operator: err.operator,
-    //     expected: err.expected,
-    //     actual: err.actual,
-    //     stack: err.stack,
-    //   }
-    //   : err
     console.log(`not ok ${test.name}`)
     console.log('  ---')
     console.log(yaml.safeDump(error, { skipInvalid: true }).split('\n').map(l => l ? '  ' + l : '').join('\n'))

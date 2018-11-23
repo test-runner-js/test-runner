@@ -1,6 +1,50 @@
 #!/usr/bin/env node
 const path = require('path')
 const commandLineArgs = require('command-line-args')
+const EventEmitter = require('events').EventEmitter
+
+class RunnerRunner extends EventEmitter {
+  constructor (options) {
+    super()
+    options = options || {}
+    this.runners = []
+    this.view = options.view
+    if (this.view.start) this.on('start', this.view.start.bind(this.view))
+    if (this.view.testPass) this.on('test-pass', this.view.testPass.bind(this.view))
+    if (this.view.testFail) this.on('test-fail', (test, err) => {
+      process.exitCode = 1
+      this.view.testFail(test, err)
+    })
+    if (this.view.testSkip) this.on('test-skip', this.view.testSkip.bind(this.view))
+  }
+
+  runner (runner) {
+    runner.manualStart = true
+    runner.view = null
+    this.runners.push(runner)
+  }
+
+  start () {
+    if (this.runners.some(r => r.tests.some(t => t.only))) {
+      for (const runner of this.runners) {
+        for (const test of runner.tests) {
+          if (!test.only) test.skip = true
+        }
+      }
+    }
+
+    const testCount = this.runners.reduce((total, r) => total + r.tests.length, 0)
+    this.emit('start', testCount)
+    for (const runner of this.runners) {
+      runner.on('test-pass', this.view.testPass.bind(this.view))
+      runner.on('test-fail', (test, err) => {
+        process.exitCode = 1
+        this.view.testFail(test, err)
+      })
+      runner.start()
+    }
+  }
+}
 
 const options = commandLineArgs([
   { name: 'files', type: String, multiple: true, defaultOption: true },
@@ -32,20 +76,12 @@ if (options.help) {
       .reduce(flatten, [])
     if (files.length) {
       const TAPView = require('./view-tap')
-      const runners = []
+      const runnerRunner = new RunnerRunner({ view: new TAPView() })
       for (const file of files) {
         const runner = require(path.resolve(process.cwd(), file))
-        runners.push(runner)
-        runner.view = new TAPView()
+        runnerRunner.runner(runner)
       }
-      if (runners.some(r => r.tests.some(t => t.only))) {
-        for (const runner of runners) {
-          for (const test of runner.tests) {
-            if (!test.only) test.skip = true
-          }
-          runner.start()
-        }
-      }
+      runnerRunner.start()
     } else {
       console.log('NO FILES')
     }
