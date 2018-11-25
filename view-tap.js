@@ -20,6 +20,20 @@ class TAPView extends ViewBase {
   testSkip (test) {
     console.log(`ok ${test.name} # SKIP`)
   }
+  end () {
+    const runnerRunner = this.attachedTo
+    const stats = {
+      passed: 0,
+      failed: 0,
+      pending: 0
+    }
+    for (const runner of runnerRunner.runners) {
+      for (const test of runner.tests) {
+        stats[test.state]++
+      }
+    }
+    console.log(`# Passed: ${stats.passed}, failed: ${stats.failed}, pending: ${stats.pending}`)
+  }
 }
 
 module.exports = TAPView

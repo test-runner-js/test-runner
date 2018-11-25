@@ -48,14 +48,15 @@ class RunnerRunner extends EventEmitter {
 
     const testCount = this.runners.reduce((total, r) => total + r.tests.length, 0)
     this.emit('start', testCount)
-    for (const runner of this.runners) {
-      runner.on('test-pass', this.view.testPass.bind(this.view))
-      runner.on('test-fail', (test, err) => {
-        process.exitCode = 1
-        this.view.testFail(test, err)
+    return Promise
+      .all(this.runners.map(runner => {
+        runner.on('test-pass', (test, result) => this.emit('test-pass', test, result))
+        runner.on('test-fail', (test, err) => this.emit('test-fail', test, err))
+        return runner.start()
+      }))
+      .then(() => {
+        this.emit('end')
       })
-      runner.start()
-    }
   }
 }
 
