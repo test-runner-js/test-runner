@@ -1,4 +1,6 @@
-class TAPView {
+const ViewBase = require('test-runner/dist/lib/view-base.js')
+
+class TAPView extends ViewBase {
   start (count) {
     console.log('TAP version 13')
     console.log(`1..${count}`)

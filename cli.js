@@ -9,23 +9,36 @@ class RunnerRunner extends EventEmitter {
     options = options || {}
     this.runners = []
     this.view = options.view
-    if (this.view.start) this.on('start', this.view.start.bind(this.view))
-    if (this.view.testPass) this.on('test-pass', this.view.testPass.bind(this.view))
-    if (this.view.testFail) this.on('test-fail', (test, err) => {
-      process.exitCode = 1
-      this.view.testFail(test, err)
-    })
-    if (this.view.testSkip) this.on('test-skip', this.view.testSkip.bind(this.view))
+  }
+
+  set view (view) {
+    if (view) {
+      if (this._view) {
+        this._view.detach()
+      }
+      this._view = view
+      this._view.attach(this)
+    } else {
+      if (this._view) {
+        this._view.detach()
+      }
+      this._view = null
+    }
+  }
+
+  get view () {
+    return this._view
   }
 
   runner (runner) {
+    if (!runner) return
     runner.manualStart = true
     runner.view = null
     this.runners.push(runner)
   }
 
   start () {
-    if (this.runners.some(r => r.tests.some(t => t.only))) {
+    if (this.runners.some(r => r.tests && r.tests.some(t => t.only))) {
       for (const runner of this.runners) {
         for (const test of runner.tests) {
           if (!test.only) test.skip = true
