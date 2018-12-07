@@ -93,7 +93,11 @@ if (options.help) {
       const runnerRunner = new RunnerRunner({ view: new TAPView() })
       for (const file of files) {
         const runner = require(path.resolve(process.cwd(), file))
-        runnerRunner.runner(runner)
+        if (runner && runner.tests && runner.tests.length) {
+          runnerRunner.runner(runner)
+        } else {
+          console.log('No runner exported: ' + file)
+        }
       }
       runnerRunner.start()
     } else {
