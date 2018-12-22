@@ -2,13 +2,14 @@
 const path = require('path')
 const commandLineArgs = require('command-line-args')
 const EventEmitter = require('events').EventEmitter
+const ViewBase = require('test-runner/dist/lib/view-base.js')
 
 class RunnerRunner extends EventEmitter {
   constructor (options) {
     super()
     options = options || {}
     this.runners = []
-    this.view = options.view
+    this.view = new (options.view(ViewBase))()
   }
 
   set view (view) {
@@ -90,7 +91,7 @@ if (options.help) {
       .reduce(flatten, [])
     if (files.length) {
       const TAPView = require('./view-tap')
-      const runnerRunner = new RunnerRunner({ view: new TAPView() })
+      const runnerRunner = new RunnerRunner({ view: TAPView })
       for (const file of files) {
         const runner = require(path.resolve(process.cwd(), file))
         if (runner && runner.tests && runner.tests.length) {

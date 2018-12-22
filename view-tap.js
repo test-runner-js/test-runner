@@ -1,6 +1,4 @@
-const ViewBase = require('test-runner/dist/lib/view-base.js')
-
-class TAPView extends ViewBase {
+module.exports = ViewBase => class TAPView extends ViewBase {
   start (count) {
     console.log('TAP version 13')
     console.log(`1..${count}`)
@@ -35,5 +33,3 @@ class TAPView extends ViewBase {
     console.log(`# Passed: ${stats.passed}, failed: ${stats.failed}, pending: ${stats.pending}`)
   }
 }
-
-module.exports = TAPView
