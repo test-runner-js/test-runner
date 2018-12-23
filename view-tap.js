@@ -1,35 +1,34 @@
 module.exports = ViewBase => class TAPView extends ViewBase {
-  start (count) {
-    console.log('TAP version 13')
-    console.log(`1..${count}`)
+  start () {
+    const count = Array.from(this.attachedTo.tom).length
+    this.log('TAP version 13')
+    this.log(`1..${count}`)
   }
   testPass (test, result) {
-    console.log(`ok ${test.name} ${result || ''}`)
+    this.log(`ok ${test.name} ${result || ''}`)
   }
   testFail (test, err) {
     const yaml = require('js-yaml')
     const error = Object.assign({}, err)
-    console.log(`not ok ${test.name}`)
-    console.log('  ---')
-    console.log(yaml.safeDump(error, { skipInvalid: true }).split('\n').map(l => l ? '  ' + l : '').join('\n'))
-    console.log('  ...')
+    this.log(`not ok ${test.name}`)
+    this.log('  ---')
+    this.log(yaml.safeDump(error, { skipInvalid: true }).split('\n').map(l => l ? '  ' + l : '').join('\n'))
+    this.log('  ...')
     process.exitCode = 1
   }
   testSkip (test) {
-    console.log(`ok ${test.name} # SKIP`)
+    this.log(`ok ${test.name} # SKIP`)
   }
   end () {
-    const runnerRunner = this.attachedTo
+    const runner = this.attachedTo
     const stats = {
-      passed: 0,
-      failed: 0,
-      pending: 0
+      pass: 0,
+      fail: 0,
+      skip: 0
     }
-    for (const runner of runnerRunner.runners) {
-      for (const test of runner.tests) {
-        stats[test.state]++
-      }
+    for (const test of runner.tom) {
+      stats[test.state]++
     }
-    console.log(`# Passed: ${stats.passed}, failed: ${stats.failed}, pending: ${stats.pending}`)
+    this.log(`# Passed: ${stats.pass}, failed: ${stats.fail}, skip: ${stats.skip}`)
   }
 }
