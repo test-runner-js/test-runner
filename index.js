@@ -36,7 +36,7 @@ class CliApp {
           .reduce(flatten, [])
         if (files.length) {
           const TestRunner = require('test-runner')
-          const TAPView = require('./view-tap')
+          const TAPView = require('./lib/view-tap')
           const runner = new TestRunner({ view: TAPView })
           for (const file of files) {
             const tom = require(path.resolve(process.cwd(), file))
