@@ -52,7 +52,15 @@ class CliApp {
           let tom
           if (toms.length > 1) {
             const Tom = require('test-object-model')
-            tom = new Tom()
+            const walkBack = require('walk-back')
+            const process = require('process')
+            const packagePath = walkBack(process.cwd(), 'package.json')
+            let name
+            if (packagePath) {
+              const pkg = require(packagePath)
+              name = pkg.name
+            }
+            tom = new Tom(name)
             for (const subTom of toms) {
               tom.add(subTom)
             }
