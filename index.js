@@ -31,6 +31,9 @@ class CliApp {
         const files = options.files
           .map(glob => {
             const fileSet = new FileSet(glob)
+            if (fileSet.notExisting.length) {
+              throw new Error('These files do not exist: ' + fileSet.notExisting.join(', '))
+            }
             return fileSet.files
           })
           .reduce(flatten, [])
@@ -48,7 +51,7 @@ class CliApp {
           }
           return runner.start()
         } else {
-          console.log('NO FILES')
+          return Promise.reject(new Error('one or more input files required'))
         }
       }
     }

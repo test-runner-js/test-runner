@@ -1,4 +1,4 @@
-const CliApp = require('./')
+const CliApp = require('../')
 const a = require('assert')
 
 function halt (err) {
@@ -18,15 +18,17 @@ function halt (err) {
   cli.start({ errorLog })
     .then()
     .catch(halt)
+    .finally(() => process.argv = origArgs)
 }
 
 { /* simple run */
   const cli = new CliApp()
   const origArgs = process.argv
-  process.argv = [ 'node', 'cli.js', 'fixture/one.js' ]
+  process.argv = [ 'node', 'cli.js', 'test/fixture/one.js' ]
   cli.start()
     .then(results => {
-      a.deepStrictEqual(results, [ 1, 2 ])
+      a.deepStrictEqual(results, [ undefined, 1, 2 ])
     })
     .catch(halt)
+    .finally(() => process.argv = origArgs)
 }

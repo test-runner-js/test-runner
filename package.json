@@ -28,7 +28,7 @@
     "cli.js"
   ],
   "scripts": {
-    "test": "node test.js"
+    "test": "node test/test.js"
   },
   "dependencies": {
     "command-line-args": "^5.0.2",
@@ -37,5 +37,8 @@
     "js-yaml": "^3.12.0",
     "reduce-flatten": "^2.0.0",
     "test-runner": "file:../core"
+  },
+  "devDependencies": {
+    "test-object-model": "file:../test-object-model"
   }
 }
