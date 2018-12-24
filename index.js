@@ -40,15 +40,28 @@ class CliApp {
         if (files.length) {
           const TestRunner = require('test-runner')
           const TAPView = require('./lib/view-tap')
-          const runner = new TestRunner({ view: TAPView })
-          for (const file of files) {
+          const toms = files.map(file => {
             const tom = require(path.resolve(process.cwd(), file))
             if (tom) {
-              runner.tom = tom
+              tom.reset(true)
+              return tom
             } else {
-              console.log('No TOM exported: ' + file)
+              throw new Error('No TOM exported: ' + file)
             }
+          })
+          let tom
+          if (toms.length > 1) {
+            const Tom = require('test-object-model')
+            tom = new Tom()
+            for (const subTom of toms) {
+              tom.add(subTom)
+            }
+          } else {
+            tom = toms[0]
           }
+          console.log(tom.tree())
+          const runner = new TestRunner({ view: TAPView })
+          runner.tom = tom
           return runner.start()
         } else {
           return Promise.reject(new Error('one or more input files required'))
