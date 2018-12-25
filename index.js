@@ -7,7 +7,8 @@ class CliApp {
     const commandLineArgs = require('command-line-args')
     const options = commandLineArgs([
       { name: 'files', type: String, multiple: true, defaultOption: true },
-      { name: 'help', type: Boolean, alias: 'h' }
+      { name: 'help', type: Boolean, alias: 'h' },
+      { name: 'tree', type: Boolean, alias: 't' }
     ])
 
     if (options.help) {
@@ -67,10 +68,12 @@ class CliApp {
           } else {
             tom = toms[0]
           }
-          console.log(tom.tree())
-          const runner = new TestRunner({ view: TAPView })
-          runner.tom = tom
-          return runner.start()
+          if (options.tree) {
+            console.log(tom.tree())
+          } else {            
+            const runner = new TestRunner({ tom, view: TAPView })
+            return runner.start()
+          }
         } else {
           return Promise.reject(new Error('one or more input files required'))
         }
