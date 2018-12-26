@@ -70,7 +70,7 @@ class CliApp {
           }
           if (options.tree) {
             console.log(tom.tree())
-          } else {            
+          } else {
             const runner = new TestRunner({ tom, view: TAPView })
             return runner.start()
           }
