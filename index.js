@@ -68,6 +68,20 @@ class CliApp {
     return Tom.combine(toms, name)
   }
 
+  processFiles (files, options) {
+    const tom = this.getTom(files)
+
+    /* --tree */
+    if (options.tree) {
+      console.log(tom.tree())
+    } else {
+      const TestRunner = require('test-runner')
+      const view = require('./lib/view-tap')
+      const runner = new TestRunner({ tom, view })
+      return runner.start()
+    }
+  }
+
   start () {
     const options = this.getOptions()
 
@@ -81,23 +95,12 @@ class CliApp {
       if (options.files && options.files.length) {
         const files = this.expandGlobs(options.files)
         if (files.length) {
-          const tom = this.getTom(files)
-
-          /* --tree */
-          if (options.tree) {
-            console.log(tom.tree())
-          } else {
-            const TestRunner = require('test-runner')
-            const view = require('./lib/view-tap')
-            const runner = new TestRunner({ tom, view })
-            return runner.start()
-          }
+          return this.processFiles(files, options)
         } else {
           return Promise.reject(new Error('one or more input files required'))
         }
       }
     }
-
   }
 }
 
