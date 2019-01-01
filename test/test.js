@@ -1,10 +1,6 @@
 const CliApp = require('../')
 const a = require('assert')
-
-function halt (err) {
-  console.log(err)
-  process.exitCode = 1
-}
+const halt = require('./lib/util').halt
 
 { /* --help */
   const counts = []
@@ -39,7 +35,19 @@ function halt (err) {
   process.argv = [ 'node', 'cli.js', 'test/fixture/three.js', 'test/fixture/two.js' ]
   cli.start()
     .then(results => {
-      a.deepStrictEqual(results, [ 1, 2, 3, 4 ])
+      a.deepStrictEqual(results, [ 5, 6, 3, 4 ])
+    })
+    .catch(halt)
+    .finally(() => process.argv = origArgs)
+}
+
+{ /* multiple file run: only */
+  const cli = new CliApp()
+  const origArgs = process.argv
+  process.argv = [ 'node', 'cli.js', 'test/fixture/four.js', 'test/fixture/only.js' ]
+  cli.start()
+    .then(results => {
+      a.deepStrictEqual(results, [ undefined, undefined, undefined, 6 ])
     })
     .catch(halt)
     .finally(() => process.argv = origArgs)

@@ -65,7 +65,9 @@ class CliApp {
     })
     const name = this.getPackageName()
     const Tom = require('test-object-model')
-    return Tom.combine(toms, name)
+    const tom = Tom.combine(toms, name)
+    tom.skipLogic()
+    return tom
   }
 
   processFiles (files, options) {
