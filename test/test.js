@@ -27,7 +27,7 @@ function halt (err) {
   process.argv = [ 'node', 'cli.js', 'test/fixture/one.js' ]
   cli.start()
     .then(results => {
-      a.deepStrictEqual(results, [ undefined, 1, 2 ])
+      a.deepStrictEqual(results, [ 1, 2 ])
     })
     .catch(halt)
     .finally(() => process.argv = origArgs)
@@ -39,7 +39,7 @@ function halt (err) {
   process.argv = [ 'node', 'cli.js', 'test/fixture/three.js', 'test/fixture/two.js' ]
   cli.start()
     .then(results => {
-      a.deepStrictEqual(results, [ undefined, undefined, 1, 2, undefined, 3, 4 ])
+      a.deepStrictEqual(results, [ 1, 2, 3, 4 ])
     })
     .catch(halt)
     .finally(() => process.argv = origArgs)
