@@ -78,7 +78,7 @@ class CliApp {
     if (options.tree) {
       console.log(tom.tree())
     } else {
-      const TestRunner = require('test-runner')
+      const TestRunner = require('test-runner-core')
       const view = options.tap ? require('./lib/view-tap') : undefined
       const runner = new TestRunner({ tom, view })
       return runner.start()
