@@ -6,7 +6,8 @@ class CliApp {
     this.optionDefinitions = [
       { name: 'files', type: String, multiple: true, defaultOption: true },
       { name: 'help', type: Boolean, alias: 'h' },
-      { name: 'tree', type: Boolean, alias: 't' }
+      { name: 'tree', type: Boolean, alias: 't' },
+      { name: 'tap', type: Boolean }
     ]
   }
   getOptions () {
@@ -78,7 +79,7 @@ class CliApp {
       console.log(tom.tree())
     } else {
       const TestRunner = require('test-runner')
-      const view = require('./lib/view-tap')
+      const view = options.tap ? require('./lib/view-tap') : undefined
       const runner = new TestRunner({ tom, view })
       return runner.start()
     }
