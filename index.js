@@ -10,17 +10,26 @@ class CliApp {
       { name: 'tap', type: Boolean }
     ]
   }
-  getOptions () {
-    const commandLineArgs = require('command-line-args')
+
+  async loadModule (moduleId) {
+    return require(moduleId)
+  }
+
+  async getOptions () {
+    const commandLineArgs = await this.loadModule('command-line-args')
     return commandLineArgs(this.optionDefinitions)
   }
 
-  printUsage () {
-    const commandLineUsage = require('command-line-usage')
+  async printUsage () {
+    const commandLineUsage = await this.loadModule('command-line-usage')
     this.errorLog(commandLineUsage([
       {
         header: 'test-runner',
         content: 'Minimal test runner.'
+      },
+      {
+        header: 'Synopsis',
+        content: '$ test-runner <options> {underline file} {underline ...}'
       },
       {
         header: 'Options',
@@ -29,9 +38,9 @@ class CliApp {
     ]))
   }
 
-  expandGlobs (files) {
-    const FileSet = require('file-set')
-    const flatten = require('reduce-flatten')
+  async expandGlobs (files) {
+    const FileSet = await this.loadModule('file-set')
+    const flatten = await this.loadModule('reduce-flatten')
     return files
       .map(glob => {
         const fileSet = new FileSet(glob)
@@ -43,65 +52,71 @@ class CliApp {
       .reduce(flatten, [])
   }
 
-  getPackageName () {
-    const walkBack = require('walk-back')
+  async getPackageName () {
+    const walkBack = await this.loadModule('walk-back')
     const packagePath = walkBack(process.cwd(), 'package.json')
     let name
     if (packagePath) {
-      const pkg = require(packagePath)
+      const pkg = await this.loadModule(packagePath)
       name = pkg.name
     }
     return name
   }
 
-  getTom (files) {
-    const path = require('path')
-    const toms = files.map(file => {
-      const tom = require(path.resolve(process.cwd(), file))
+  async getTom (files) {
+    const path = await this.loadModule('path')
+    const toms = []
+    for (const file of files) {
+      const tom = await this.loadModule(path.resolve(process.cwd(), file))
       if (tom) {
-        return tom
+        toms.push(tom)
       } else {
         throw new Error('No TOM exported: ' + file)
       }
-    })
-    const name = this.getPackageName()
-    const Tom = require('test-object-model')
+    }
+    const name = await this.getPackageName()
+    const Tom = await this.loadModule('test-object-model')
     const tom = Tom.combine(toms, name)
     tom.skipLogic()
     return tom
   }
 
-  processFiles (files, options) {
-    const tom = this.getTom(files)
+  async processFiles (files, options) {
+    const tom = await this.getTom(files)
 
     /* --tree */
     if (options.tree) {
       console.log(tom.tree())
     } else {
-      const TestRunner = require('test-runner-core')
-      const view = options.tap ? require('./lib/view-tap') : undefined
+      const TestRunner = await this.loadModule('test-runner-core')
+      const view = options.tap ? await this.loadModule('./lib/view-tap') : undefined
       const runner = new TestRunner({ tom, view })
       return runner.start()
     }
   }
 
-  start () {
-    const options = this.getOptions()
+  async start () {
+    const options = await this.getOptions()
 
     /* --help */
     if (options.help) {
-      this.printUsage()
+      await this.printUsage()
       return Promise.resolve()
 
     /* --files */
     } else {
       if (options.files && options.files.length) {
-        const files = this.expandGlobs(options.files)
+        const files = await this.expandGlobs(options.files)
         if (files.length) {
           return this.processFiles(files, options)
         } else {
-          return Promise.reject(new Error('one or more input files required'))
+          this.errorLog('one or more input files required')
+          await this.printUsage()
+          return Promise.resolve()
         }
+      } else {
+        await this.printUsage()
+        return Promise.resolve()
       }
     }
   }
