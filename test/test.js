@@ -4,8 +4,6 @@ const halt = require('./lib/util').halt
 
 { /* no args */
   const counts = []
-  const origArgs = process.argv
-  process.argv = [ 'node', 'cli.js' ]
   function errorLog (msg) {
     a.ok(/test-runner/.test(msg))
     counts.push('log')
@@ -14,7 +12,6 @@ const halt = require('./lib/util').halt
   cli.start()
     .then()
     .catch(halt)
-    .finally(() => process.argv = origArgs)
 }
 
 { /* --help */
