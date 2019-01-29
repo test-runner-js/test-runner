@@ -76,9 +76,7 @@ class CliApp {
     }
     const name = await this.getPackageName()
     const Tom = await this.loadModule('test-object-model')
-    const tom = Tom.combine(toms, name)
-    tom.skipLogic()
-    return tom
+    return Tom.combine(toms, name)
   }
 
   async processFiles (files, options) {
