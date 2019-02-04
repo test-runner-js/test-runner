@@ -1,4 +1,4 @@
 #!/usr/bin/env node
-const CliApp = require('../')
-const cli = new CliApp()
+const TestRunner = require('../')
+const cli = new TestRunner()
 cli.start()

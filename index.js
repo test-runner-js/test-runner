@@ -1,4 +1,4 @@
-class CliApp {
+class TestRunner {
   constructor (options) {
     options = options || {}
     this.log = options.log || console.log
@@ -29,7 +29,7 @@ class CliApp {
       },
       {
         header: 'Synopsis',
-        content: '$ test-runner <options> {underline file} {underline ...}'
+        content: '$ test-runner [<options>] {underline file} {underline ...}'
       },
       {
         header: 'Options',
@@ -120,4 +120,4 @@ class CliApp {
   }
 }
 
-module.exports = CliApp
+module.exports = TestRunner
