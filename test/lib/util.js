@@ -1,5 +1,5 @@
 function halt (err) {
-  console.log(err)
+  console.error(require('util').inspect(err, { depth: 6, colors: true }))
   process.exitCode = 1
 }
 

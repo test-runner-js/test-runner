@@ -86,9 +86,12 @@ class TestRunner {
     if (options.tree) {
       console.log(tom.tree())
     } else {
-      const TestRunner = await this.loadModule('test-runner-core')
+      const TestRunnerCore = await this.loadModule('test-runner-core')
       const view = options.tap ? await this.loadModule('./lib/view-tap') : undefined
-      const runner = new TestRunner({ tom, view })
+      const runner = new TestRunnerCore({ tom, view })
+      runner.on('fail', () => {
+        process.exitCode = 1
+      })
       return runner.start()
     }
   }
