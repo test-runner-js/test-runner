@@ -1,6 +1,7 @@
 class TestRunner {
   constructor (options) {
     options = options || {}
+    this.options = options
     this.log = options.log || console.log
     this.errorLog = options.errorLog || console.error
     this.optionDefinitions = [
@@ -17,7 +18,7 @@ class TestRunner {
 
   async getOptions () {
     const commandLineArgs = await this.loadModule('command-line-args')
-    return commandLineArgs(this.optionDefinitions)
+    return Object.assign({}, this.options, commandLineArgs(this.optionDefinitions))
   }
 
   async printUsage () {
