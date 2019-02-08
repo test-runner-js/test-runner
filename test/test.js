@@ -1,4 +1,4 @@
-const TestRunner = require('../')
+const TestRunnerCli = require('../')
 const a = require('assert')
 const halt = require('./lib/util').halt
 
@@ -8,7 +8,7 @@ const halt = require('./lib/util').halt
     a.ok(/test-runner/.test(msg))
     counts.push('log')
   }
-  const cli = new TestRunner({ errorLog })
+  const cli = new TestRunnerCli({ errorLog })
   cli.start()
     .then()
     .catch(halt)
@@ -20,7 +20,7 @@ const halt = require('./lib/util').halt
     a.ok(/test-runner/.test(msg))
     counts.push('log')
   }
-  class TestRunnerTest extends TestRunner {
+  class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
       return commandLineArgs(this.optionDefinitions, { argv: [ '--help' ] })
@@ -33,7 +33,7 @@ const halt = require('./lib/util').halt
 }
 
 { /* single file run */
-  class TestRunnerTest extends TestRunner {
+  class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
       return commandLineArgs(this.optionDefinitions, { argv: [ 'test/fixture/one.js' ] })
@@ -48,7 +48,7 @@ const halt = require('./lib/util').halt
 }
 
 { /* multiple file run */
-  class TestRunnerTest extends TestRunner {
+  class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
       return commandLineArgs(this.optionDefinitions, { argv: [ 'test/fixture/three.js', 'test/fixture/two.js' ] })
@@ -63,7 +63,7 @@ const halt = require('./lib/util').halt
 }
 
 { /* multiple file run: only */
-  class TestRunnerTest extends TestRunner {
+  class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
       return commandLineArgs(this.optionDefinitions, { argv: [ 'test/fixture/four.js', 'test/fixture/only.js' ] })
@@ -78,7 +78,7 @@ const halt = require('./lib/util').halt
 }
 
 { /* exitCode: fail */
-  class TestRunnerTest extends TestRunner {
+  class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
       return commandLineArgs(this.optionDefinitions, { argv: [ 'test/fixture/fail.js' ] })

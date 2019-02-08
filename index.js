@@ -1,4 +1,4 @@
-class TestRunner {
+class TestRunnerCli {
   constructor (options) {
     options = options || {}
     this.options = options
@@ -93,6 +93,22 @@ class TestRunner {
       runner.on('fail', () => {
         process.exitCode = 1
       })
+      runner.on('start', count => {
+        console.log(`Running ${count} tests`)
+      })
+      runner.on('end', () => {
+        const timeElapsed = runner.stats.end - runner.stats.start
+        console.log(`Completed in: ${timeElapsed.toPrecision(6)}ms`)
+      })
+      runner.on('test-pass', (test, result) => {
+        console.log('\x1b[32m✓\x1b[0m', test.name, result || 'ok')
+      })
+      runner.on('test-fail', (test, err) => {
+        console.log('\x1b[31m⨯\x1b[0m', test.name, err.message || 'ok')
+      })
+      runner.on('test-skip', (test) => {
+        console.log('\x1b[90m-', test.name, '\x1b[0m')
+      })
       return runner.start()
     }
   }
@@ -124,4 +140,4 @@ class TestRunner {
   }
 }
 
-module.exports = TestRunner
+module.exports = TestRunnerCli
