@@ -88,33 +88,11 @@ class TestRunnerCli {
       console.log(tom.tree())
     } else {
       const TestRunnerCore = await this.loadModule('test-runner-core')
-      const view = options.tap ? await this.loadModule('./lib/view-tap') : undefined
+      const View = await this.loadModule(options.tap ? './lib/view-tap' : './lib/view-default')
+      const view = new View()
       const runner = new TestRunnerCore({ tom, view })
       runner.on('fail', () => {
         process.exitCode = 1
-      })
-      runner.on('start', count => {
-        console.log(`Running ${count} tests`)
-      })
-      runner.on('end', () => {
-        const timeElapsed = runner.stats.end - runner.stats.start
-        console.log(`Completed in: ${timeElapsed}ms. Pass: ${runner.stats.pass}, fail: ${runner.stats.fail}, skip: ${runner.stats.skip}.`)
-      })
-      runner.on('test-pass', (test, result) => {
-        const ident = ' '.repeat(test.level())
-        console.log(`${ident}\x1b[32m✓\x1b[0m`, test.name, result || 'ok')
-      })
-      runner.on('test-fail', (test, err) => {
-        const ident = ' '.repeat(test.level())
-        console.log(`${ident}\x1b[31m⨯\x1b[0m`, test.name, err.message || 'ok')
-      })
-      runner.on('test-skip', (test) => {
-        const ident = ' '.repeat(test.level())
-        console.log(`${ident}\x1b[90m-`, test.name, '\x1b[0m')
-      })
-      runner.on('test-ignore', (test) => {
-        const ident = ' '.repeat(test.level())
-        console.log(`${ident}\x1b[35m-`, test.name, '\x1b[0m')
       })
       return runner.start()
     }
@@ -146,5 +124,7 @@ class TestRunnerCli {
     }
   }
 }
+
+TestRunnerCli.Tom = require('test-object-model')
 
 module.exports = TestRunnerCli
