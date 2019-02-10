@@ -98,16 +98,23 @@ class TestRunnerCli {
       })
       runner.on('end', () => {
         const timeElapsed = runner.stats.end - runner.stats.start
-        console.log(`Completed in: ${timeElapsed.toPrecision(6)}ms`)
+        console.log(`Completed in: ${timeElapsed}ms. Pass: ${runner.stats.pass}, fail: ${runner.stats.fail}, skip: ${runner.stats.skip}.`)
       })
       runner.on('test-pass', (test, result) => {
-        console.log('\x1b[32m✓\x1b[0m', test.name, result || 'ok')
+        const ident = ' '.repeat(test.level())
+        console.log(`${ident}\x1b[32m✓\x1b[0m`, test.name, result || 'ok')
       })
       runner.on('test-fail', (test, err) => {
-        console.log('\x1b[31m⨯\x1b[0m', test.name, err.message || 'ok')
+        const ident = ' '.repeat(test.level())
+        console.log(`${ident}\x1b[31m⨯\x1b[0m`, test.name, err.message || 'ok')
       })
       runner.on('test-skip', (test) => {
-        console.log('\x1b[90m-', test.name, '\x1b[0m')
+        const ident = ' '.repeat(test.level())
+        console.log(`${ident}\x1b[90m-`, test.name, '\x1b[0m')
+      })
+      runner.on('test-ignore', (test) => {
+        const ident = ' '.repeat(test.level())
+        console.log(`${ident}\x1b[35m-`, test.name, '\x1b[0m')
       })
       return runner.start()
     }
