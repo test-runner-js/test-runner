@@ -33,13 +33,14 @@
     "test": "node test/test.js"
   },
   "dependencies": {
+    "chalk": "^2.4.2",
     "command-line-args": "^5.0.2",
     "command-line-usage": "^5.0.5",
     "file-set": "^2.0.1",
     "js-yaml": "^3.12.1",
     "reduce-flatten": "^2.0.0",
     "test-object-model": "^0.3.5",
-    "test-runner-core": "file:../test-runner-core",
+    "test-runner-core": "^0.6.0-11",
     "walk-back": "^3.0.1"
   },
   "devDependencies": {}
