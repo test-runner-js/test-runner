@@ -88,7 +88,8 @@ class TestRunnerCli {
       console.log(tom.tree())
     } else {
       const TestRunnerCore = await this.loadModule('test-runner-core')
-      const View = await this.loadModule(options.tap ? './lib/view-tap' : './lib/view-default')
+      const path = await this.loadModule('path')
+      const View = await this.loadModule(path.resolve(__dirname, options.tap ? './lib/view-tap' : './lib/view-default'))
       const view = new View()
       const runner = new TestRunnerCore({ tom, view })
       runner.on('fail', () => {

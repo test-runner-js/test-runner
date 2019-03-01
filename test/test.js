@@ -95,3 +95,18 @@ const halt = require('./lib/util').halt
     })
     .catch(halt)
 }
+
+{ /* --tap */
+  class TestRunnerTest extends TestRunnerCli {
+    async getOptions () {
+      const commandLineArgs = await this.loadModule('command-line-args')
+      return commandLineArgs(this.optionDefinitions, { argv: [ '--tap', 'test/fixture/tap.js' ] })
+    }
+  }
+  const cli = new TestRunnerTest()
+  cli.start()
+    .then(results => {
+      // a.deepStrictEqual(results, [ 1, 2 ])
+    })
+    .catch(halt)
+}
