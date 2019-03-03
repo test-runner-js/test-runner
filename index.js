@@ -7,6 +7,7 @@ class TestRunnerCli {
     this.optionDefinitions = [
       { name: 'files', type: String, multiple: true, defaultOption: true },
       { name: 'help', type: Boolean, alias: 'h' },
+      { name: 'version', type: Boolean },
       { name: 'tree', type: Boolean, alias: 't' },
       { name: 'tap', type: Boolean }
     ]
@@ -37,6 +38,12 @@ class TestRunnerCli {
         optionList: this.optionDefinitions
       }
     ]))
+  }
+
+  async printVersion () {
+    const path = await this.loadModule('path')
+    const pkg = await this.loadModule(path.resolve(__dirname, 'package.json'))
+    this.errorLog(pkg.version)
   }
 
   async expandGlobs (files) {
@@ -105,6 +112,11 @@ class TestRunnerCli {
     /* --help */
     if (options.help) {
       await this.printUsage()
+      return Promise.resolve()
+
+    /* --version */
+    } else if (options.version) {
+      await this.printVersion()
       return Promise.resolve()
 
     /* --files */
