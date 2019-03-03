@@ -1,7 +1,7 @@
 {
   "name": "test-runner",
   "author": "Lloyd Brookes <75pound@gmail.com>",
-  "version": "0.6.0-11",
+  "version": "0.6.0-12",
   "description": "The CLI for test-runner",
   "bin": {
     "test-runner": "bin/cli.js"
