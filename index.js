@@ -103,7 +103,7 @@ class TestRunnerCli {
     const TestRunnerCore = await this.loadModule('test-runner-core')
     const path = await this.loadModule('path')
     const View = await this.loadModule(options.tap
-      ? path.resolve(__dirname, './lib/view-tap')
+      ? path.resolve(__dirname, './lib/view-tap.js')
       : '@test-runner/default-view'
     )
     const view = new View()
