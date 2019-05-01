@@ -1,6 +1,6 @@
 function halt (err) {
   console.error(require('util').inspect(err, { depth: 6, colors: true }))
-  process.exitCode = 1
+  process.exit(1)
 }
 
 function sleep (ms, result) {
