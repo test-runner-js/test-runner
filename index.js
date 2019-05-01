@@ -1,4 +1,16 @@
+/**
+ * @module test-runner
+ */
+
+/**
+ * @alias module:test-runner
+ */
 class TestRunnerCli {
+  /**
+   * @param {object} [optons]
+   * @param {function} [optons.log]
+   * @param {function} [optons.errorLog]
+   */
   constructor (options) {
     options = options || {}
     this.options = options
@@ -87,55 +99,56 @@ class TestRunnerCli {
     return Tom.combine(toms, name)
   }
 
-  async processFiles (files, options) {
-    const tom = await this.getTom(files)
-
-    /* --tree */
-    if (options.tree) {
-      console.log(tom.tree())
-    } else {
-      const TestRunnerCore = await this.loadModule('test-runner-core')
-      const path = await this.loadModule('path')
-      const View = await this.loadModule(options.tap
-        ? path.resolve(__dirname,  './lib/view-tap')
-        : '@test-runner/default-view'
-      )
-      const view = new View()
-      const runner = new TestRunnerCore({ tom, view })
-      runner.on('fail', () => {
-        process.exitCode = 1
-      })
-      return runner.start()
-    }
+  async runTests (tom, options) {
+    const TestRunnerCore = await this.loadModule('test-runner-core')
+    const path = await this.loadModule('path')
+    const View = await this.loadModule(options.tap
+      ? path.resolve(__dirname, './lib/view-tap')
+      : '@test-runner/default-view'
+    )
+    const view = new View()
+    const runner = new TestRunnerCore({ tom, view })
+    runner.on('fail', () => {
+      process.exitCode = 1
+    })
+    return runner.start()
   }
 
+  /**
+   * Start test-runner.
+   * @return {Promise}
+   * @fulfil {Array<result>}
+   */
   async start () {
     const options = await this.getOptions()
 
     /* --help */
     if (options.help) {
-      await this.printUsage()
-      return Promise.resolve()
+      return this.printUsage()
 
     /* --version */
     } else if (options.version) {
-      await this.printVersion()
-      return Promise.resolve()
+      return this.printVersion()
 
     /* --files */
     } else {
       if (options.files && options.files.length) {
         const files = await this.expandGlobs(options.files)
         if (files.length) {
-          return this.processFiles(files, options)
+          const tom = await this.getTom(files)
+
+          /* --tree */
+          if (options.tree) {
+            console.log(tom.tree())
+          } else {
+            return this.runTests(tom, options)
+          }
         } else {
           this.errorLog('one or more input files required')
-          await this.printUsage()
-          return Promise.resolve()
+          return this.printUsage()
         }
       } else {
-        await this.printUsage()
-        return Promise.resolve()
+        return this.printUsage()
       }
     }
   }

@@ -2,36 +2,6 @@ const TestRunnerCli = require('../')
 const a = require('assert')
 const halt = require('./lib/util').halt
 
-{ /* no args */
-  const counts = []
-  function errorLog (msg) {
-    a.ok(/test-runner/.test(msg))
-    counts.push('log')
-  }
-  const cli = new TestRunnerCli({ errorLog })
-  cli.start()
-    .then()
-    .catch(halt)
-}
-
-{ /* --help */
-  const counts = []
-  function errorLog (msg) {
-    a.ok(/test-runner/.test(msg))
-    counts.push('log')
-  }
-  class TestRunnerTest extends TestRunnerCli {
-    async getOptions () {
-      const commandLineArgs = await this.loadModule('command-line-args')
-      return commandLineArgs(this.optionDefinitions, { argv: [ '--help' ] })
-    }
-  }
-  const cli = new TestRunnerTest({ errorLog })
-  cli.start()
-    .then()
-    .catch(halt)
-}
-
 { /* single file run */
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
