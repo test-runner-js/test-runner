@@ -6,7 +6,58 @@
 
 # test-runner
 
-Next version WIP.
+A command-line interface for test-runner-core, a minimal, isomorphic, run-anywhere test-runner designed for simplicity and extensibility.
+
+This tool is for running a TOM on the command line. You can run your TOM in various ways using various tools: 
+
+| Environment  | Description                          | Tool          |
+| ===========  | ========================             | ============= |
+| Web          | Run your tests in Chrome from the command line | web-runner    |
+| Command-line | Run your test-suite locally or in CI | test-runner   |
+| Multi-core   | Run across multiple CPU cores        | mc-runner   |
+| ECMAScript Modules | Run an ECM project             | esm-runner   |
+| Script       | Programmatic                         | test-runner-core |   
+
+
+## Synopsis
+
+Create a module which exports a Test Object Model (TOM) containing one or more tests, save it as `test.js`.
+
+```js
+const { Tom } = require('test-runner')
+const assert = require('assert')
+
+const tom = new Tom()
+
+tom.test('Quick maths', function () {
+  const result = 2 + 2 - 1
+  assert.strictEqual(result, 3)
+})
+
+module.exports = tom
+```
+
+Run the tests using test-runner.
+
+```
+$ test-runner test.js
+
+Running 2 tests
+
+ ✓ Synopsis Quick maths
+ ✓ Synopsis Supahot
+
+Completed in: 14ms. Pass: 2, fail: 0, skip: 0.
+```
+
+## Install
+
+Install via npm. 
+
+```
+$ npm install --save-dev test-runner
+```
+
 
 * * *
 
