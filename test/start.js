@@ -6,13 +6,14 @@ const halt = require('./lib/util').halt
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
-      return commandLineArgs(this.optionDefinitions, { argv: [ 'test/fixture/one.js' ] })
+      return commandLineArgs(this.optionDefinitions, { argv: [ 'test/fixture/one.js', '--silent' ] })
     }
   }
   const cli = new TestRunnerTest()
   cli.start()
-    .then(results => {
-      // a.deepStrictEqual(results, [ 1, 2 ])
+    .then(runner => {
+      a.strictEqual(runner.tom.children[0].result, 1)
+      a.strictEqual(runner.tom.children[1].result, 2)
     })
     .catch(halt)
 }
@@ -21,7 +22,7 @@ const halt = require('./lib/util').halt
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
-      return commandLineArgs(this.optionDefinitions, { argv: [ 'test/fixture/three.js', 'test/fixture/two.js' ] })
+      return commandLineArgs(this.optionDefinitions, { argv: [ '--silent', 'test/fixture/three.js', 'test/fixture/two.js' ] })
     }
   }
   const cli = new TestRunnerTest()
@@ -36,7 +37,7 @@ const halt = require('./lib/util').halt
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
-      return commandLineArgs(this.optionDefinitions, { argv: [ 'test/fixture/four.js', 'test/fixture/only.js' ] })
+      return commandLineArgs(this.optionDefinitions, { argv: [ '--silent', 'test/fixture/four.js', 'test/fixture/only.js' ] })
     }
   }
   const cli = new TestRunnerTest()
@@ -51,7 +52,7 @@ const halt = require('./lib/util').halt
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
-      return commandLineArgs(this.optionDefinitions, { argv: [ 'test/fixture/fail.js' ] })
+      return commandLineArgs(this.optionDefinitions, { argv: [ '--silent', 'test/fixture/fail.js' ] })
     }
   }
   const runnerCli = new TestRunnerTest()
@@ -70,7 +71,7 @@ const halt = require('./lib/util').halt
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
-      return commandLineArgs(this.optionDefinitions, { argv: [ '--tap', 'test/fixture/tap.js' ] })
+      return commandLineArgs(this.optionDefinitions, { argv: [ '--silent', '--tap', 'test/fixture/tap.js' ] })
     }
   }
   const cli = new TestRunnerTest()
@@ -79,4 +80,8 @@ const halt = require('./lib/util').halt
       // a.deepStrictEqual(results, [ 1, 2 ])
     })
     .catch(halt)
+}
+
+{ /* --tree */
+  // TODO
 }

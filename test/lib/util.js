@@ -3,11 +3,4 @@ function halt (err) {
   process.exit(1)
 }
 
-function sleep (ms, result) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => resolve(result), ms)
-  })
-}
-
 exports.halt = halt
-exports.sleep = sleep

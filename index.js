@@ -8,20 +8,48 @@
 class TestRunnerCli {
   /**
    * @param {object} [optons]
-   * @param {function} [optons.log]
    * @param {function} [optons.errorLog]
    */
   constructor (options) {
     options = options || {}
     this.options = options
-    this.log = options.log || console.log
     this.errorLog = options.errorLog || console.error
     this.optionDefinitions = [
-      { name: 'files', type: String, multiple: true, defaultOption: true },
-      { name: 'help', type: Boolean, alias: 'h' },
-      { name: 'version', type: Boolean },
-      { name: 'tree', type: Boolean, alias: 't' },
-      { name: 'tap', type: Boolean }
+      {
+        name: 'files',
+        type: String,
+        multiple: true,
+        defaultOption: true,
+        description: 'One of more files, each of which export a test-object-model instance.'
+      },
+      {
+        name: 'help',
+        type: Boolean,
+        alias: 'h',
+        description: 'Print this usage guide.'
+      },
+      {
+        name: 'version',
+        type: Boolean,
+        description: 'Print the version number and exit.'
+      },
+      {
+        name: 'tree',
+        type: Boolean,
+        alias: 't',
+        description: 'Print the tree structure of the supplied TOM.'
+      },
+      {
+        name: 'silent',
+        type: Boolean,
+        alias: 's',
+        description: 'Run without printing a report to the console.'
+      },
+      {
+        name: 'tap',
+        type: Boolean,
+        description: 'Output a TAP-compatible report.'
+      }
     ]
   }
 
@@ -48,6 +76,9 @@ class TestRunnerCli {
       {
         header: 'Options',
         optionList: this.optionDefinitions
+      },
+      {
+        content: 'For more information see: {underline https://github.com/test-runner-js/test-runner}'
       }
     ]))
   }
@@ -102,22 +133,25 @@ class TestRunnerCli {
   async runTests (tom, options) {
     const TestRunnerCore = await this.loadModule('test-runner-core')
     const path = await this.loadModule('path')
-    const View = await this.loadModule(options.tap
-      ? path.resolve(__dirname, './lib/view-tap.js')
-      : '@test-runner/default-view'
-    )
-    const view = new View()
+    let view = null
+    if (!options.silent) {
+      const View = await this.loadModule(options.tap
+        ? path.resolve(__dirname, './lib/view-tap.js')
+        : '@test-runner/default-view'
+      )
+      view = new View()
+    }
     const runner = new TestRunnerCore({ tom, view })
     runner.on('fail', () => {
       process.exitCode = 1
     })
-    return runner.start()
+    return runner.start().then(() => runner)
   }
 
   /**
    * Start test-runner.
    * @return {Promise}
-   * @fulfil {Array<result>}
+   * @fulfil {TestRunnerCore}
    */
   async start () {
     const options = await this.getOptions()
@@ -139,7 +173,7 @@ class TestRunnerCli {
 
           /* --tree */
           if (options.tree) {
-            console.log(tom.tree())
+            this.errorLog(tom.tree())
           } else {
             return this.runTests(tom, options)
           }
