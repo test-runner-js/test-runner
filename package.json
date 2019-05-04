@@ -6,7 +6,7 @@
   "bin": {
     "test-runner": "bin/cli.js"
   },
-  "repository": "https://github.com/test-runner-js/cli",
+  "repository": "https://github.com/test-runner-js/test-runner",
   "keywords": [
     "test-runner",
     "test",

@@ -1,7 +1,7 @@
 [![view on npm](https://img.shields.io/npm/v/test-runner.svg)](https://www.npmjs.org/package/test-runner)
 [![npm module downloads](https://img.shields.io/npm/dt/test-runner.svg)](https://www.npmjs.org/package/test-runner)
-[![Build Status](https://travis-ci.org/test-runner-js/cli.svg?branch=master)](https://travis-ci.org/test-runner-js/cli)
-[![Dependency Status](https://badgen.net/david/dep/test-runner-js/cli)](https://david-dm.org/test-runner-js/cli)
+[![Build Status](https://travis-ci.org/test-runner-js/test-runner.svg?branch=master)](https://travis-ci.org/test-runner-js/test-runner)
+[![Dependency Status](https://badgen.net/david/dep/test-runner-js/test-runner)](https://david-dm.org/test-runner-js/test-runner)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](https://github.com/feross/standard)
 
 # test-runner
@@ -27,11 +27,16 @@ Create a module which exports a Test Object Model (TOM) containing one or more t
 const { Tom } = require('test-runner')
 const assert = require('assert')
 
-const tom = new Tom()
+const tom = new Tom('Synopsis')
 
-tom.test('Quick maths', function () {
+tom.test('Maths should be quick', function () {
   const result = 2 + 2 - 1
   assert.strictEqual(result, 3)
+})
+
+tom.test('Supahot should give the wrong number', function () {
+  const wrongNumber = () => true
+  assert.strictEqual(wrongNumber(), true)
 })
 
 module.exports = tom
@@ -44,8 +49,8 @@ $ test-runner test.js
 
 Running 2 tests
 
- ✓ Synopsis Quick maths
- ✓ Synopsis Supahot
+ ✓ Synopsis Maths should be quick
+ ✓ Synopsis Supahot should give the wrong number
 
 Completed in: 14ms. Pass: 2, fail: 0, skip: 0.
 ```
