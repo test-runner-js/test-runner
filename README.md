@@ -11,7 +11,7 @@ A command-line interface for test-runner-core, a minimal, isomorphic, run-anywhe
 This tool is for running a TOM on the command line. You can run your TOM in various ways using various tools: 
 
 | Environment  | Description                          | Tool          |
-| ===========  | ========================             | ============= |
+| -----------  | ------------------------             | ------------- |
 | Web          | Run your tests in Chrome from the command line | web-runner    |
 | Command-line | Run your test-suite locally or in CI | test-runner   |
 | Multi-core   | Run across multiple CPU cores        | mc-runner   |
