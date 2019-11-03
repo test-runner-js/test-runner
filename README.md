@@ -4,19 +4,21 @@
 [![Dependency Status](https://badgen.net/david/dep/test-runner-js/test-runner)](https://david-dm.org/test-runner-js/test-runner)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](https://github.com/feross/standard)
 
+***This project is a WIP***
+
 # test-runner
 
-A command-line interface for test-runner-core, a minimal, isomorphic, run-anywhere test-runner designed for simplicity and extensibility.
+The command-line interface for a minimal, isomorphic test-runner designed for simplicity, flexibility and extensibility.
 
-This tool is for running a TOM on the command line. You can run your TOM in various ways using various tools: 
+This tool is for running a TOM (Test Object Model) on the command line. You can run your TOM in various ways using various associated tools:
 
 | Environment  | Description                          | Tool          |
 | -----------  | ------------------------             | ------------- |
-| Web          | Run your tests in Chrome from the command line | web-runner    |
-| Command-line | Run your test-suite locally or in CI | test-runner   |
-| Multi-core   | Run across multiple CPU cores        | mc-runner   |
-| ECMAScript Modules | Run an ECM project             | esm-runner   |
-| Script       | Programmatic                         | test-runner-core |   
+| Web          | Run your tests in headless Chrome from the command line | web-runner    |
+| Command-line | Run your test suite locally or in CI | test-runner   |
+| Multi-core   | Run a test suite across multiple CPU cores | mc-runner   |
+| ECMAScript Modules | Test an ECM project natively without transpilation | esm-runner   |
+| Script       | Programmatic | test-runner-core |
 
 
 ## Synopsis
@@ -57,7 +59,7 @@ Completed in: 14ms. Pass: 2, fail: 0, skip: 0.
 
 ## Install
 
-Install via npm. 
+Install via npm.
 
 ```
 $ npm install --save-dev test-runner
