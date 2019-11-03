@@ -85,3 +85,25 @@ const halt = require('./lib/util').halt
 { /* --tree */
   // TODO
 }
+
+{ /* no TOM exported */
+  class TestRunnerTest extends TestRunnerCli {
+    async getOptions () {
+      const commandLineArgs = await this.loadModule('command-line-args')
+      return commandLineArgs(this.optionDefinitions, { argv: [ 'test/fixture/no-tom-exported.js', '--silent' ] })
+    }
+  }
+  const cli = new TestRunnerTest()
+  cli.start()
+    .then(runner => {
+      throw new Error('should not reach here')
+    })
+    .catch(err => {
+      a.ok(/valid tom required/i.test(err.message))
+    })
+    .catch(halt)
+}
+
+{ /* test default TOM names (filename if not specified).. Requires cli.start() to resolve with TOM instances run instead of test results. */
+  // TODO
+}
