@@ -119,13 +119,13 @@ class TestRunnerCli {
     const toms = []
     for (const file of files) {
       const tom = await this.loadModule(path.resolve(process.cwd(), file))
-      if (tom.name === 'tom') {
-        const path = await this.loadModule('path')
-        const extname = path.extname(file)
-        const basename = path.basename(file, extname)
-        tom.name = basename
-      }
       if (tom) {
+        if (tom.name === 'tom') {
+          const path = await this.loadModule('path')
+          const extname = path.extname(file)
+          const basename = path.basename(file, extname)
+          tom.name = basename
+        }
         toms.push(tom)
       } else {
         throw new Error('No TOM exported: ' + file)
