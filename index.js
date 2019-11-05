@@ -49,7 +49,14 @@ class TestRunnerCli {
         name: 'tap',
         type: Boolean,
         description: 'Output a TAP-compatible report.'
-      }
+      },
+      {
+        name: 'max-concurrency',
+        type: Number,
+        alias: 'm',
+        description: 'Maximum number of input files to process concurrently.'
+      },
+
     ]
   }
 
@@ -59,7 +66,7 @@ class TestRunnerCli {
 
   async getOptions () {
     const commandLineArgs = await this.loadModule('command-line-args')
-    return Object.assign({}, this.options, commandLineArgs(this.optionDefinitions))
+    return Object.assign({}, this.options, commandLineArgs(this.optionDefinitions, { camelCase: true }))
   }
 
   async printUsage () {
@@ -114,7 +121,7 @@ class TestRunnerCli {
     return name
   }
 
-  async getTom (files) {
+  async getTom (files, options) {
     const path = await this.loadModule('path')
     const toms = []
     for (const file of files) {
@@ -133,7 +140,7 @@ class TestRunnerCli {
     }
     const name = await this.getPackageName()
     const Tom = await this.loadModule('test-object-model')
-    return Tom.combine(toms, name)
+    return Tom.combine(toms, name, options)
   }
 
   async runTests (tom, options) {
@@ -141,13 +148,13 @@ class TestRunnerCli {
     const path = await this.loadModule('path')
     let view = null
     if (!options.silent) {
-      const View = await this.loadModule(options.tap
+      const viewModule = options.tap
         ? path.resolve(__dirname, './lib/view-tap.js')
         : '@test-runner/default-view'
-      )
+      const View = await this.loadModule(viewModule)
       view = new View()
     }
-    const runner = new TestRunnerCore({ tom, view })
+    const runner = new TestRunnerCore(tom, { view })
     runner.on('fail', () => {
       process.exitCode = 1
     })
@@ -175,11 +182,15 @@ class TestRunnerCli {
       if (options.files && options.files.length) {
         const files = await this.expandGlobs(options.files)
         if (files.length) {
-          const tom = await this.getTom(files)
+          const { maxConcurrency } = options
+          const tom = await this.getTom(files, { maxConcurrency })
 
           /* --tree */
           if (options.tree) {
-            this.errorLog(tom.tree())
+            const path = await this.loadModule('path')
+            const TreeView = await this.loadModule(path.resolve(__dirname, './lib/tree.js'))
+            const treeView = new TreeView(tom)
+            this.errorLog(treeView.toString())
           } else {
             return this.runTests(tom, options)
           }

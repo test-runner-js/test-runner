@@ -23,7 +23,7 @@ const halt = require('./lib/util').halt
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
-      return commandLineArgs(this.optionDefinitions, { argv: [ '--help' ] })
+      return commandLineArgs(this.optionDefinitions, { argv: ['--help'] })
     }
   }
   const cli = new TestRunnerTest({ errorLog })
