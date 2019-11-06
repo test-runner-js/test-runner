@@ -56,7 +56,11 @@ class TestRunnerCli {
         alias: 'm',
         description: 'Maximum number of input files to process concurrently.'
       },
-
+      {
+        name: 'view',
+        type: String,
+        description: 'Custom view to use.'
+      },
     ]
   }
 
@@ -64,9 +68,37 @@ class TestRunnerCli {
     return require(moduleId)
   }
 
+  async getViewClass (options = {}) {
+    const path = await this.loadModule('path')
+    const viewModule = options.tap
+      ? path.resolve(__dirname, './lib/view-tap.js')
+      : options.view
+        ? options.view
+        : '@test-runner/default-view'
+    return viewModule ? this.loadModule(viewModule) : null
+  }
+
+  async getAllOptionDefinitions () {
+    const allOptionDefinitions = this.optionDefinitions.slice()
+    const commandLineArgs = await this.loadModule('command-line-args')
+    const coreOptions = commandLineArgs(this.optionDefinitions, { camelCase: true, partial: true })
+    const ViewClass = await this.getViewClass(coreOptions)
+    if (ViewClass) {
+      allOptionDefinitions.push(...ViewClass.optionDefinitions())
+    }
+    return allOptionDefinitions
+  }
+
   async getOptions () {
     const commandLineArgs = await this.loadModule('command-line-args')
-    return Object.assign({}, this.options, commandLineArgs(this.optionDefinitions, { camelCase: true }))
+    const optionDefinitions = await this.getAllOptionDefinitions()
+    const options = Object.assign({}, this.options, commandLineArgs(optionDefinitions, { camelCase: true }))
+    if (!options.silent) {
+      const ViewClass = await this.getViewClass(options)
+      const view = new ViewClass(options)
+      options._view = view
+    }
+    return options
   }
 
   async printUsage () {
@@ -82,7 +114,7 @@ class TestRunnerCli {
       },
       {
         header: 'Options',
-        optionList: this.optionDefinitions
+        optionList: await this.getAllOptionDefinitions()
       },
       {
         content: 'For more information see: {underline https://github.com/test-runner-js/test-runner}'
@@ -146,15 +178,7 @@ class TestRunnerCli {
   async runTests (tom, options) {
     const TestRunnerCore = await this.loadModule('test-runner-core')
     const path = await this.loadModule('path')
-    let view = null
-    if (!options.silent) {
-      const viewModule = options.tap
-        ? path.resolve(__dirname, './lib/view-tap.js')
-        : '@test-runner/default-view'
-      const View = await this.loadModule(viewModule)
-      view = new View()
-    }
-    const runner = new TestRunnerCore(tom, { view })
+    const runner = new TestRunnerCore(tom, { view: options._view })
     runner.on('fail', () => {
       process.exitCode = 1
     })
