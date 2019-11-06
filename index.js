@@ -34,6 +34,11 @@ class TestRunnerCli {
         description: 'Print the version number and exit.'
       },
       {
+        name: 'debug',
+        type: Boolean,
+        description: 'Print debug output.'
+      },
+      {
         name: 'tree',
         type: Boolean,
         alias: 't',
@@ -178,7 +183,7 @@ class TestRunnerCli {
   async runTests (tom, options) {
     const TestRunnerCore = await this.loadModule('test-runner-core')
     const path = await this.loadModule('path')
-    const runner = new TestRunnerCore(tom, { view: options._view })
+    const runner = new TestRunnerCore(tom, { view: options._view, debug: options.debug })
     runner.on('fail', () => {
       process.exitCode = 1
     })
