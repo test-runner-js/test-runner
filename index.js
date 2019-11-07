@@ -51,11 +51,6 @@ class TestRunnerCli {
         description: 'Run without printing a report to the console.'
       },
       {
-        name: 'tap',
-        type: Boolean,
-        description: 'Output a TAP-compatible report.'
-      },
-      {
         name: 'max-concurrency',
         type: Number,
         alias: 'm',
@@ -66,6 +61,11 @@ class TestRunnerCli {
         type: String,
         description: 'Custom view to use.'
       },
+      {
+        name: 'oneline',
+        type: Boolean,
+        description: 'One line output mode.'
+      },
     ]
   }
 
@@ -75,11 +75,11 @@ class TestRunnerCli {
 
   async getViewClass (options = {}) {
     const path = await this.loadModule('path')
-    const viewModule = options.tap
-      ? path.resolve(__dirname, './lib/view-tap.js')
-      : options.view
+    const viewModule = options.view
         ? options.view
-        : '@test-runner/default-view'
+        : options.oneline
+          ? '@test-runner/oneline-view'
+          : '@test-runner/default-view'
     return viewModule ? this.loadModule(viewModule) : null
   }
 
@@ -88,8 +88,9 @@ class TestRunnerCli {
     const commandLineArgs = await this.loadModule('command-line-args')
     const coreOptions = commandLineArgs(this.optionDefinitions, { camelCase: true, partial: true })
     const ViewClass = await this.getViewClass(coreOptions)
-    if (ViewClass) {
-      allOptionDefinitions.push(...ViewClass.optionDefinitions())
+    if (ViewClass && ViewClass.optionDefinitions) {
+      const viewOptionDefinitions = ViewClass.optionDefinitions() || []
+      allOptionDefinitions.push(...viewOptionDefinitions)
     }
     return allOptionDefinitions
   }
