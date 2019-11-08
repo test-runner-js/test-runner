@@ -27,8 +27,9 @@ const halt = require('./lib/util').halt
   }
   const cli = new TestRunnerTest()
   cli.start()
-    .then(results => {
-      // a.deepStrictEqual(results, [ 5, 6, 3, 4 ])
+    .then(runner => {
+      const results = Array.from(runner.tom).map(tom => tom.result).filter(r => r)
+      a.deepStrictEqual(results, [ 5, 6, 3, 4 ])
     })
     .catch(halt)
 }
@@ -42,8 +43,9 @@ const halt = require('./lib/util').halt
   }
   const cli = new TestRunnerTest()
   cli.start()
-    .then(results => {
-      // a.deepStrictEqual(results, [ undefined, undefined, undefined, 6 ])
+    .then(runner => {
+      const results = Array.from(runner.tom).map(tom => tom.result).filter(r => r)
+      a.deepStrictEqual(results, [ 6 ])
     })
     .catch(halt)
 }
@@ -59,16 +61,11 @@ const halt = require('./lib/util').halt
   const origExitCode = process.exitCode
   a.strictEqual(process.exitCode, undefined)
   runnerCli.start()
-    .then(results => {
-      // a.deepStrictEqual(results, [ undefined, 8 ])
+    .then(runner => {
       a.strictEqual(process.exitCode, 1)
       process.exitCode = origExitCode
     })
     .catch(halt)
-}
-
-{ /* --tree */
-  // TODO
 }
 
 { /* no TOM exported */
@@ -89,6 +86,26 @@ const halt = require('./lib/util').halt
     .catch(halt)
 }
 
-{ /* test default TOM names (filename if not specified).. Requires cli.start() to resolve with TOM instances run instead of test results. */
-  // TODO
+{ /* test default TOM names (filename if not specified) */
+  class TestRunnerTest extends TestRunnerCli {
+    async getOptions () {
+      const commandLineArgs = await this.loadModule('command-line-args')
+      return commandLineArgs(this.optionDefinitions, { argv: ['--debug', 'test/fixture/no-tom-names/no-name-one.js', 'test/fixture/no-tom-names/no-name-two.js'] })
+    }
+  }
+  const cli = new TestRunnerTest()
+  cli.start()
+    .then(runner => {
+      const results = Array.from(runner.tom).map(tom => tom.name)
+      a.deepStrictEqual(results, [
+        'test-runner',
+        'no-name-one',
+        'one',
+        'two',
+        'no-name-two',
+        'one',
+        'two'
+      ])
+    })
+    .catch(halt)
 }
