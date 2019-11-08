@@ -199,6 +199,17 @@ class TestRunnerCli {
   async start () {
     const options = await this.getOptions()
 
+    process.on('uncaughtException', (err, origin) => {
+      this.errorLog(`\nAn ${origin} was thrown, possibly in a separate tick.\n`)
+      this.errorLog(err)
+      process.exit(1)
+    })
+    process.on('unhandledRejection', (reason, promise) => {
+      this.errorLog(`\nAn unhandledRejection was thrown. Please ensure the rejecting promise is returned from the test function.\n`)
+      this.errorLog(reason)
+      process.exit(1)
+    })
+
     /* --help */
     if (options.help) {
       return this.printUsage()
