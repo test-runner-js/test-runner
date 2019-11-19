@@ -4,7 +4,7 @@
 [![Dependency Status](https://badgen.net/david/dep/test-runner-js/test-runner)](https://david-dm.org/test-runner-js/test-runner)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](https://github.com/feross/standard)
 
-***This project is a WIP***
+***This project and documentation are a WIP***
 
 # test-runner
 
@@ -12,18 +12,36 @@ The command-line interface for a minimal, isomorphic test-runner designed for si
 
 This tool is for running a TOM (Test Object Model) on the command line. You can run your TOM in various ways using various associated tools:
 
-| Environment  | Description                          | Tool          |
-| -----------  | ------------------------             | ------------- |
-| Web          | Run your tests in headless Chrome from the command line | web-runner    |
-| Command-line | Run your test suite locally or in CI | test-runner   |
-| Multi-core   | Run a test suite across multiple CPU cores | mc-runner   |
-| ECMAScript Modules | Test an ECM project natively without transpilation | esm-runner   |
-| Script       | Programmatic | test-runner-core |
-
-
 ## Synopsis
 
+To run a test suite, test-runner takes one or more files as input each exporting a set of tests. This is the general syntax.
+
+```
+$ test-runner [<options>] <file> ...
+```
+
+
+
+
+
 Create a module which exports a Test Object Model (TOM) containing one or more tests, save it as `test.js`.
+
+
+```js
+const { Tom } = require('test-runner')
+
+/* Define a simple test model */
+const tom = new Tom()
+
+tom.test('A successful test', function () {
+  return 'This passed'
+})
+
+tom.test('A failing test', function () {
+  throw new Error('This failed')
+})
+```
+
 
 ```js
 const { Tom } = require('test-runner')
@@ -64,6 +82,16 @@ Install via npm.
 ```
 $ npm install --save-dev test-runner
 ```
+
+## See also
+
+| Environment  | Description                          | Tool          |
+| -----------  | ------------------------             | ------------- |
+| Web          | Run your tests in headless Chrome from the command line | web-runner    |
+| Command-line | Run your test suite locally or in CI | test-runner   |
+| Multi-core   | Run a test suite across multiple CPU cores | mc-runner   |
+| ECMAScript Modules | Test an ECM project natively without transpilation | esm-runner   |
+| Script       | Programmatic | test-runner-core |
 
 
 * * *
