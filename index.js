@@ -71,7 +71,7 @@ class TestRunnerCli {
 
   async loadModule (moduleId) {
     const loadModule = require('load-module')
-    return loadModule(moduleId, { paths: '.' })
+    return loadModule(moduleId, { paths: ['.', __dirname] })
   }
 
   async getViewClass (options = {}) {
