@@ -51,10 +51,15 @@ class TestRunnerCli {
         description: 'Run without printing a report to the console.'
       },
       {
+        name: 'max-file-concurrency',
+        type: Number,
+        description: 'Maximum number of input files to process concurrently.'
+      },
+      {
         name: 'max-concurrency',
         type: Number,
-        alias: 'm',
-        description: 'Maximum number of input files to process concurrently.'
+        alias: 'c',
+        description: 'Maximum number of tests to process concurrently.'
       },
       {
         name: 'view',
@@ -224,9 +229,12 @@ class TestRunnerCli {
       if (options.files && options.files.length) {
         const files = await this.expandGlobs(options.files)
         if (files.length) {
-          const { maxConcurrency } = options
-          const tom = await this.getTom(files, { maxConcurrency })
-
+          const tom = await this.getTom(files, { maxConcurrency: options.maxFileConcurrency })
+          if (options.maxConcurrency) {
+            for (const test of tom) {
+              test.maxConcurrency = options.maxConcurrency
+            }
+          }
           /* --tree */
           if (options.tree) {
             const path = await this.loadModule('path')
