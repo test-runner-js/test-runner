@@ -60,12 +60,7 @@ class TestRunnerCli {
         name: 'view',
         type: String,
         description: 'Custom view to use.'
-      },
-      {
-        name: 'oneline',
-        type: Boolean,
-        description: 'One line output mode.'
-      },
+      }
     ]
   }
 
@@ -76,11 +71,16 @@ class TestRunnerCli {
 
   async getViewClass (options = {}) {
     const path = await this.loadModule('path')
-    const viewModule = options.view
-        ? options.view
-        : options.oneline
+    let viewModule
+    if (options.view) {
+      viewModule = options.view === 'live'
+        ? '@test-runner/live-view'
+        : options.view === 'oneline'
           ? '@test-runner/oneline-view'
-          : '@test-runner/default-view'
+          : options.view
+    } else {
+      viewModule = '@test-runner/default-view'
+    }
     return viewModule ? this.loadModule(viewModule) : null
   }
 

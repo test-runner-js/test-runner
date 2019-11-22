@@ -13,3 +13,33 @@ const halt = require('./lib/util').halt
     a.equal(result.children[1].name, 'no-name-two')
   })
 }
+
+{ /* testRunnerCli.getViewClass() - live */
+  const cli = new TestRunnerCli()
+  const options = {
+    view: 'live'
+  }
+  cli.getViewClass(options).then(ViewClass => {
+    a.equal(ViewClass.name, 'LiveView')
+  })
+}
+
+{ /* testRunnerCli.getViewClass() - oneline */
+  const cli = new TestRunnerCli()
+  const options = {
+    view: 'oneline'
+  }
+  cli.getViewClass(options).then(ViewClass => {
+    a.equal(ViewClass.name, 'OnelineView')
+  })
+}
+
+{ /* testRunnerCli.getViewClass() - test-view */
+  const cli = new TestRunnerCli()
+  const options = {
+    view: 'test/fixture/test-view.js'
+  }
+  cli.getViewClass(options).then(ViewClass => {
+    a.equal(ViewClass.name, 'TestView')
+  })
+}
