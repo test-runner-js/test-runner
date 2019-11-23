@@ -64,29 +64,35 @@ class TestRunnerCli {
       {
         name: 'view',
         type: String,
-        description: 'Custom view to use.'
+        description: 'Either "oneline", "live", the path to a view class or the name of an npm module exporting a view class.'
       }
     ]
   }
 
-  async loadModule (moduleId) {
-    const loadModule = require('load-module')
-    return loadModule(moduleId, { paths: ['.', __dirname] })
+  async loadModule (moduleId, useLoadModule) {
+    if (useLoadModule) {
+      const loadModule = require('load-module')
+      return loadModule(moduleId, { paths: ['.', __dirname] })
+    } else {
+      return require(moduleId)
+    }
   }
 
   async getViewClass (options = {}) {
     const path = await this.loadModule('path')
     let viewModule
     if (options.view) {
-      viewModule = options.view === 'live'
-        ? '@test-runner/live-view'
-        : options.view === 'oneline'
-          ? '@test-runner/oneline-view'
-          : options.view
+      if (options.view === 'live') {
+        viewModule = await this.loadModule('@test-runner/live-view')
+      } else if (options.view === 'oneline') {
+        viewModule = await this.loadModule('@test-runner/oneline-view')
+      } else {
+        viewModule = await this.loadModule(options.view, true)
+      }
     } else {
-      viewModule = '@test-runner/default-view'
+      viewModule = await this.loadModule('@test-runner/default-view')
     }
-    return viewModule ? this.loadModule(viewModule) : null
+    return viewModule || null
   }
 
   async getAllOptionDefinitions () {
