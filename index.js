@@ -222,6 +222,16 @@ class TestRunnerCli {
       process.exit(1)
     })
 
+    const warnings = []
+    process.on('warning', warning => {
+      warnings.push(warning)
+    })
+
+    process.on('exit', () => {
+      for (const warning of warnings)
+      console.log(warning)
+    })
+
     /* --help */
     if (options.help) {
       return this.printUsage()

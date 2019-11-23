@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --no-warnings
 const TestRunner = require('../')
 const cli = new TestRunner()
 cli.start().catch(err => {
