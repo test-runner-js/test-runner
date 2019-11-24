@@ -34,7 +34,7 @@
     "docs": "jsdoc2md index.js > docs/API.md"
   },
   "dependencies": {
-    "@test-runner/default-view": "^0.3.6",
+    "@test-runner/default-view": "^0.3.7",
     "@test-runner/live-view": "^0.1.5",
     "@test-runner/oneline-view": "^0.1.2",
     "command-line-args": "^5.1.1",

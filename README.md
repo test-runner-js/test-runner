@@ -87,7 +87,7 @@ Alternatively, you can run your tests with any of the following runners - each i
 | -----------  | ------------------------             | ------------- |
 | Web          | Run your tests in headless Chrome from the command line | [web-runner](https://github.com/test-runner-js/web-runner)    |
 | Multi-core   | Run a test suite across multiple CPU cores | [mc-runner](https://github.com/test-runner-js/mc-runner) |
-| Node.js ECMAScript Modules | Test an ECM project natively without transpilation | [esm-runner](https://github.com/test-runner-js/esm-runner) |
+| ECMAScript Modules | Test an Node.js ESM project natively without transpilation | [esm-runner](https://github.com/test-runner-js/esm-runner) |
 | Script       | Programmatic | [test-runner-core](https://github.com/test-runner-js/test-runner-core) |
 
 

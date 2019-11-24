@@ -23,6 +23,34 @@ class TestRunnerCli {
         description: 'One of more files, each of which export a test-object-model instance.'
       },
       {
+        name: 'tree',
+        type: Boolean,
+        alias: 't',
+        description: 'Inspect the supplied test-object-model structure without running the tests.'
+      },
+      {
+        name: 'silent',
+        type: Boolean,
+        alias: 's',
+        description: 'Run without printing any output. Useful when you\'re only interested in the exit code.'
+      },
+      {
+        name: 'max-file-concurrency',
+        type: Number,
+        description: 'Maximum number of input files to process concurrently. Defaults to 10.'
+      },
+      {
+        name: 'max-concurrency',
+        type: Number,
+        alias: 'c',
+        description: 'Maximum number of tests to process concurrently. Overrides all values set within the test object model.'
+      },
+      {
+        name: 'view',
+        type: String,
+        description: 'Attach an alternative view. Specifiy either "oneline", "live", the path to a view class or the name of an installed view module.'
+      },
+      {
         name: 'help',
         type: Boolean,
         alias: 'h',
@@ -36,37 +64,11 @@ class TestRunnerCli {
       {
         name: 'debug',
         type: Boolean,
-        description: 'Print debug output.'
+        description: "Prints debug output. Use this when a test is misbehaving and you'd like to know why."
       },
-      {
-        name: 'tree',
-        type: Boolean,
-        alias: 't',
-        description: 'Print the tree structure of the supplied TOM.'
-      },
-      {
-        name: 'silent',
-        type: Boolean,
-        alias: 's',
-        description: 'Run without printing a report to the console.'
-      },
-      {
-        name: 'max-file-concurrency',
-        type: Number,
-        description: 'Maximum number of input files to process concurrently.'
-      },
-      {
-        name: 'max-concurrency',
-        type: Number,
-        alias: 'c',
-        description: 'Maximum number of tests to process concurrently.'
-      },
-      {
-        name: 'view',
-        type: String,
-        description: 'Either "oneline", "live", the path to a view class or the name of an npm module exporting a view class.'
-      }
     ]
+
+    this.viewOptionDefinitions = []
   }
 
   async loadModule (moduleId, useLoadModule) {
@@ -101,16 +103,16 @@ class TestRunnerCli {
     const coreOptions = commandLineArgs(this.optionDefinitions, { camelCase: true, partial: true })
     const ViewClass = await this.getViewClass(coreOptions)
     if (ViewClass && ViewClass.optionDefinitions) {
-      const viewOptionDefinitions = ViewClass.optionDefinitions() || []
-      allOptionDefinitions.push(...viewOptionDefinitions)
+      this.viewOptionDefinitions = ViewClass.optionDefinitions() || []
+      allOptionDefinitions.push(...this.viewOptionDefinitions)
     }
+    this.allOptionDefinitions = allOptionDefinitions
     return allOptionDefinitions
   }
 
   async getOptions () {
     const commandLineArgs = await this.loadModule('command-line-args')
-    const optionDefinitions = await this.getAllOptionDefinitions()
-    const options = Object.assign({}, this.options, commandLineArgs(optionDefinitions, { camelCase: true }))
+    const options = Object.assign({}, this.options, commandLineArgs(this.allOptionDefinitions, { camelCase: true }))
     if (!options.silent) {
       const ViewClass = await this.getViewClass(options)
       const view = new ViewClass(options)
@@ -124,7 +126,7 @@ class TestRunnerCli {
     this.errorLog(commandLineUsage([
       {
         header: 'test-runner',
-        content: 'Minimal test runner.'
+        content: 'Minimal, flexible, extensible command-line test runner.'
       },
       {
         header: 'Synopsis',
@@ -132,7 +134,12 @@ class TestRunnerCli {
       },
       {
         header: 'Options',
-        optionList: await this.getAllOptionDefinitions()
+        optionList: this.optionDefinitions,
+        hide: 'files'
+      },
+      {
+        header: 'View options',
+        optionList: this.viewOptionDefinitions
       },
       {
         content: 'For more information see: {underline https://github.com/test-runner-js/test-runner}'
@@ -209,6 +216,7 @@ class TestRunnerCli {
    * @fulfil {TestRunnerCore}
    */
   async start () {
+    await this.getAllOptionDefinitions()
     const options = await this.getOptions()
 
     process.on('uncaughtException', (err, origin) => {
