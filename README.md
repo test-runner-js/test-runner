@@ -8,29 +8,21 @@
 
 # test-runner
 
-The command-line interface for a minimal, isomorphic test-runner designed for simplicity, flexibility and extensibility.
-
-This tool is for running a TOM (Test Object Model) on the command line. You can run your TOM in various ways using various associated tools:
+Minimal, flexible, extensible command-line test runner.
 
 ## Synopsis
 
-To run a test suite, test-runner takes one or more files as input each exporting a set of tests. This is the general syntax.
+As input, test-runner takes one or more files each exporting a set of tests. This is the general syntax.
 
 ```
 $ test-runner [<options>] <file> ...
 ```
 
-
-
-
-
-Create a module which exports a Test Object Model (TOM) containing one or more tests, save it as `test.js`.
-
+Trivial example. Create a module which exports a [test object model](https://github.com/test-runner-js/test-object-model) instance. Add a test to the model by supplying a name and test function to `tom.test`. If the test function throws or returns a rejected promise it is considered a fail. Save this file as `test.js`.
 
 ```js
 const { Tom } = require('test-runner')
 
-/* Define a simple test model */
 const tom = new Tom()
 
 tom.test('A successful test', function () {
@@ -40,23 +32,29 @@ tom.test('A successful test', function () {
 tom.test('A failing test', function () {
   throw new Error('This failed')
 })
+
+module.exports = tom
 ```
 
+In reality, a typical test suite might look more like this.
 
 ```js
 const { Tom } = require('test-runner')
 const assert = require('assert')
 
-const tom = new Tom('Synopsis')
+const tom = new Tom()
 
-tom.test('Maths should be quick', function () {
-  const result = 2 + 2 - 1
-  assert.strictEqual(result, 3)
+tom.test('Math.random() should return a number between 0 and 1', function () {
+  const result = Math.random()
+  assert.equal(typeof result, 'number')
+  assert.ok(result >= 0 && result <= 1)
 })
 
-tom.test('Supahot should give the wrong number', function () {
-  const wrongNumber = () => true
-  assert.strictEqual(wrongNumber(), true)
+tom.test('REST API should return the current todo item', async function () {
+  const response = await fetch('https://jsonplaceholder.typicode.com/todos/1')
+  const todo = await response.json()
+  assert.equal(todo.userId, 1)
+  assert.equal(todo.title, 'delectus aut autem')
 })
 
 module.exports = tom
@@ -67,31 +65,30 @@ Run the tests using test-runner.
 ```
 $ test-runner test.js
 
-Running 2 tests
+Start: 2 tests loaded
 
- ✓ Synopsis Maths should be quick
- ✓ Synopsis Supahot should give the wrong number
+✓ synopsis Math.random() should return a number between 0 and 1
+✓ synopsis REST API should return the current todo item
 
-Completed in: 14ms. Pass: 2, fail: 0, skip: 0.
+Completed in 199ms. Pass: 2, fail: 0, skip: 0.
 ```
 
 ## Install
-
-Install via npm.
 
 ```
 $ npm install --save-dev test-runner
 ```
 
-## See also
+## Other runners
+
+Alternatively, you can run your tests with any of the following runners - each is compatible with test-object-model.
 
 | Environment  | Description                          | Tool          |
 | -----------  | ------------------------             | ------------- |
-| Web          | Run your tests in headless Chrome from the command line | web-runner    |
-| Command-line | Run your test suite locally or in CI | test-runner   |
-| Multi-core   | Run a test suite across multiple CPU cores | mc-runner   |
-| ECMAScript Modules | Test an ECM project natively without transpilation | esm-runner   |
-| Script       | Programmatic | test-runner-core |
+| Web          | Run your tests in headless Chrome from the command line | [web-runner](https://github.com/test-runner-js/web-runner)    |
+| Multi-core   | Run a test suite across multiple CPU cores | [mc-runner](https://github.com/test-runner-js/mc-runner) |
+| Node.js ECMAScript Modules | Test an ECM project natively without transpilation | [esm-runner](https://github.com/test-runner-js/esm-runner) |
+| Script       | Programmatic | [test-runner-core](https://github.com/test-runner-js/test-runner-core) |
 
 
 * * *
