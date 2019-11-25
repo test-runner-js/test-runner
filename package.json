@@ -2,7 +2,7 @@
   "name": "test-runner",
   "author": "Lloyd Brookes <75pound@gmail.com>",
   "version": "0.8.4",
-  "description": "The CLI for test-runner",
+  "description": "Lightweight command-line test runner",
   "bin": {
     "test-runner": "bin/cli.js"
   },

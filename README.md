@@ -8,7 +8,7 @@
 
 # test-runner
 
-Minimal, flexible, extensible command-line test runner.
+Lightweight command-line test runner.
 
 ## Synopsis
 
