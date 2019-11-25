@@ -12,13 +12,21 @@ Minimal, flexible, extensible command-line test runner.
 
 ## Synopsis
 
-As input, test-runner takes one or more files each exporting a set of tests. This is the general syntax.
+Install test-runner.
+
+```
+$ npm install --save-dev test-runner
+```
+
+As input, test-runner takes one or more files each exporting a set of tests. This is the general syntax (see [here](https://github.com/test-runner-js/test-runner/wiki/test-runner-command-line-options) for the full usage guide):
 
 ```
 $ test-runner [<options>] <file> ...
 ```
 
-Trivial example. Create a module which exports a [test object model](https://github.com/test-runner-js/test-object-model) instance. Add a test to the model by supplying a name and test function to `tom.test`. If the test function throws or returns a rejected promise it is considered a fail. Save this file as `test.js`.
+A test file is a module which exports a [test object model](https://github.com/test-runner-js/test-object-model) instance. Add tests to the model by invoking [`tom.test`](https://github.com/test-runner-js/test-object-model/blob/master/docs/API.md#module_test-object-model--Tom+test) with a name and test function. Once a test file is written, it can be run in test-runner, web-runner, esm-runner or mc-runner.
+
+Trivial test file example. If the test function throws or returns a rejected promise it is considered a fail.
 
 ```js
 const { Tom } = require('test-runner')
@@ -36,7 +44,7 @@ tom.test('A failing test', function () {
 module.exports = tom
 ```
 
-In reality, a typical test suite might look more like this.
+In reality, a typical test suite might look more like this. Save this as `test.js`.
 
 ```js
 const { Tom } = require('test-runner')
@@ -63,7 +71,7 @@ module.exports = tom
 Run the tests using test-runner.
 
 ```
-$ test-runner test.js
+$ npx test-runner test.js
 
 Start: 2 tests loaded
 
