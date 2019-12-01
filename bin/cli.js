@@ -1,4 +1,6 @@
-#!/usr/bin/env -S node --no-warnings
+#!/bin/sh
+":" //# comment; exec /usr/bin/env node --no-warnings "$0" "$@"
+
 const TestRunner = require('../')
 const cli = new TestRunner()
 cli.start().catch(err => {
