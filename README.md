@@ -8,7 +8,7 @@
 
 # test-runner
 
-Lightweight command-line test runner. Part of a suite of tools aiming to help the full-stack JavaScript engineer create reusable, isomorphic code which runs in both Node.js and the browser.
+Lightweight command-line test runner. Part of a suite of tools to help the full-stack JavaScript engineer create and test isomorphic code.
 
 ## Synopsis
 
@@ -78,88 +78,11 @@ Start: 2 tests loaded
 Completed in 199ms. Pass: 2, fail: 0, skip: 0.
 ```
 
-### Test ECMAScript Module JavaScript using Node.js
+### More examples
 
-If you're working with ES Modules, your test file will look more like this (use `import` and `export default` instead of `require` and `module.exports`).
+* [How to test ECMAScript modules using Node.js](https://github.com/test-runner-js/test-runner/wiki/How-to-test-ECMAScript-modules-using-Node.js)
+* [How to test ECMAScript modules in the browser](https://github.com/test-runner-js/test-runner/wiki/How-to-test-ECMAScript-modules-in-the-browser)
 
-```js
-import TestRunner from 'test-runner'
-import assert from 'assert'
-import fetch from 'node-fetch'
-
-const tom = new TestRunner.Tom()
-
-tom.test('Math.random() should return a number between 0 and 1', function () {
-  const result = Math.random()
-  assert.equal(typeof result, 'number')
-  assert.ok(result >= 0 && result <= 1)
-})
-
-tom.test('REST API should return the current todo item', async function () {
-  const response = await fetch('https://jsonplaceholder.typicode.com/todos/1')
-  const todo = await response.json()
-  assert.equal(todo.userId, 1)
-  assert.equal(todo.title, 'delectus aut autem')
-})
-
-export default tom
-```
-
-To run these tests you would need [esm-runner](https://github.com/test-runner-js/esm-runner). This runner is identical to test-runner with the one difference that it supports ECMAScript Modules (ESM).
-
-```
-$ npx esm-runner test.mjs
-
-Start: 2 tests loaded
-
-✓ synopsis Math.random() should return a number between 0 and 1
-✓ synopsis REST API should return the current todo item
-
-Completed in 199ms. Pass: 2, fail: 0, skip: 0.
-```
-
-### Test ECMAScript Module JavaScript in the browser using Chromium
-
-To run our test file in the browser we need to make a couple of adjustments. Instead of Node's `assert` we use chai. Also, there is no need to load `node-fetch` since `fetch` is built into the browser.
-
-
-```js
-import Tom from 'test-object-model'
-import 'https://www.chaijs.com/chai.js'
-
-const assert = chai.assert
-const tom = new Tom()
-
-tom.test('Math.random() should return a number between 0 and 1', function () {
-  const result = Math.random()
-  assert.equal(typeof result, 'number')
-  assert.ok(result >= 0 && result <= 1)
-})
-
-tom.test('REST API should return the current todo item', async function () {
-  const response = await fetch('https://jsonplaceholder.typicode.com/todos/1')
-  const todo = await response.json()
-  assert.equal(todo.userId, 1)
-  assert.equal(todo.title, 'delectus aut autem')
-})
-
-export default tom
-````
-
-Run the tests in Chromium using web-runner.
-
-```
-$ web-runner browser.mjs
-
-Start: 2 tests loaded
-
-✓ browser Math.random() should return a number between 0 and 1 3.7ms
-✓ browser REST API should return the current todo item 122.0ms
-
-Completed in 134ms. Pass: 2, fail: 0, skip: 0.
-```
-
-Please see [the wiki](https://github.com/test-runner-js/test-runner/wiki) for more examples.
 
 ## Install
 
@@ -178,6 +101,10 @@ Alternatively, you can run your tests with any of the following runners - each i
 | ECMAScript Modules | Test an Node.js ESM project natively without transpilation | [esm-runner](https://github.com/test-runner-js/esm-runner) |
 | Script       | Programmatic | [test-runner-core](https://github.com/test-runner-js/test-runner-core) |
 
+
+## See also
+
+Please see [the wiki](https://github.com/test-runner-js/test-runner/wiki) for more examples.
 
 * * *
 
