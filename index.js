@@ -232,10 +232,10 @@ class TestRunnerCli {
       if (options.files && options.files.length) {
         const files = await this.expandGlobs(options.files)
         if (files.length) {
-          const tom = await this.getTom(files, { maxConcurrency: options.maxFileConcurrency })
+          const tom = await this.getTom(files, { maxConcurrency: options.maxFileConcurrency || 10 })
           if (options.maxConcurrency) {
             for (const test of tom) {
-              test.maxConcurrency = options.maxConcurrency
+              test.options.maxConcurrency = options.maxConcurrency
             }
           }
           /* --tree */
