@@ -18,7 +18,9 @@ As input, test-runner takes one or more files each exporting a set of tests. Thi
 $ test-runner [<options>] <file> ...
 ```
 
-A test file is a module which exports a [test object model](https://github.com/test-runner-js/test-object-model) instance. Add tests to the model by invoking [`tom.test`](https://github.com/test-runner-js/test-object-model/blob/master/docs/API.md#module_test-object-model--Tom+test) with a name and test function. Once a test file is written, it can be run in Node.js using [test-runner](https://github.com/test-runner-js/test-runner), [esm-runner](https://github.com/test-runner-js/esm-runner) or [mc-runner](https://github.com/test-runner-js/mc-runner) or in the browser (Chromium) using [web-runner](https://github.com/test-runner-js/web-runner).
+### Test file basics
+
+A test file is a module which exports a [test object model](https://github.com/test-runner-js/test-object-model) instance. Once written, a test file can be run in Node.js using [test-runner](https://github.com/test-runner-js/test-runner) or [esm-runner](https://github.com/test-runner-js/esm-runner) or in the browser (Chromium) using [web-runner](https://github.com/test-runner-js/web-runner). Add tests to the model by invoking [`tom.test`](https://github.com/test-runner-js/test-object-model/blob/master/docs/API.md#module_test-object-model--Tom+test) with a name and test function.
 
 Trivial test file example. If the test function throws or returns a rejected promise it is considered a fail.
 
@@ -27,12 +29,24 @@ const { Tom } = require('test-runner')
 
 const tom = new Tom()
 
-tom.test('A successful test', function () {
+tom.test('A successful sync test', function () {
   return 'This passed'
 })
 
-tom.test('A failing test', function () {
+tom.test('A failing sync test', function () {
   throw new Error('This failed')
+})
+
+tom.test('A successful async test', async function () {
+  return 'This passed'
+})
+
+tom.test('A failing async test', async function () {
+  throw new Error('This failed')
+})
+
+tom.test('Also a failing async test', async function () {
+  return Promise.reject(new Error('This failed'))
 })
 
 module.exports = tom
@@ -96,11 +110,8 @@ Alternatively, you can run your tests with any of the following runners - each i
 
 | Environment  | Description                          | Tool          |
 | -----------  | ------------------------             | ------------- |
-| Web          | Run your tests in headless Chrome from the command line | [web-runner](https://github.com/test-runner-js/web-runner)    |
-| Multi-core   | Run a test suite across multiple CPU cores | [mc-runner](https://github.com/test-runner-js/mc-runner) |
-| ECMAScript Modules | Test an Node.js ESM project natively without transpilation | [esm-runner](https://github.com/test-runner-js/esm-runner) |
-| Script       | Programmatic | [test-runner-core](https://github.com/test-runner-js/test-runner-core) |
-
+| Web          | Run your tests in a headless Chromium browser from the command line | [web-runner](https://github.com/test-runner-js/web-runner)    |
+| Node.js | Test ECMAScript modules natively in Node.js | [esm-runner](https://github.com/test-runner-js/esm-runner) |
 
 ## See also
 

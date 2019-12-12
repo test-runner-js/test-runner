@@ -18,7 +18,6 @@
 | Param | Type |
 | --- | --- |
 | [optons] | <code>object</code> | 
-| [optons.log] | <code>function</code> | 
 | [optons.errorLog] | <code>function</code> | 
 
 <a name="module_test-runner--TestRunnerCli+start"></a>
