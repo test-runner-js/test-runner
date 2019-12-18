@@ -8,7 +8,7 @@
 
 # test-runner
 
-Full-featured, fast, lightweight command-line test runner. Part of a suite of tools to help the full-stack JavaScript engineer create and test isomorphic code.
+Fully-featured, lightweight command-line test runner. Part of a suite of tools to help the full-stack JavaScript engineer create and test isomorphic code.
 
 ## Synopsis
 
