@@ -25,6 +25,10 @@ process.on('warning', warning => {
 })
 
 process.on('exit', () => {
-  for (const warning of warnings)
-  console.log(warning)
+  const ignoreList = ['ExperimentalWarning']
+  for (const warning of warnings) {
+    if (!ignoreList.includes(warning.name)) {
+      console.log(warning)
+    }
+  }
 })

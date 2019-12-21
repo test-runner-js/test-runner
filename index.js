@@ -76,7 +76,12 @@ class TestRunnerCli {
       const loadModule = require('load-module')
       return loadModule(moduleId, { paths: ['.', __dirname] })
     } else {
-      return require(moduleId)
+      if (/\.mjs$/.test(moduleId)) {
+        const mod = await import(moduleId)
+        return mod.default
+      } else {
+        return require(moduleId)
+      }
     }
   }
 
