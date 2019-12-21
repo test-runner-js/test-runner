@@ -8,7 +8,7 @@
 
 # test-runner
 
-Fully-featured, lightweight command-line test runner. Part of a suite of tools to help the full-stack JavaScript engineer create and test isomorphic code.
+Fully-featured, lightweight command-line test runner. Part of a suite of tools to help the full-stack JavaScript engineer create and test modern, isomorphic code.
 
 ## Synopsis
 
@@ -22,9 +22,9 @@ $ test-runner [<options>] <file> ...
 
 ### Test file basics
 
-A test file is a module (either CommonJS or ECMAScript) which must export a [test object model](https://github.com/test-runner-js/test-object-model) instance. This test file can be run natively (no build or transpilation step required) in Node.js, the browser (in headless Chromium) or both (isomorphic). Add tests to the model by invoking [`tom.test`](https://github.com/test-runner-js/test-object-model/blob/master/docs/API.md#module_test-object-model--Tom+test) with a name and test function.
+A test file is a module (either CommonJS or ECMAScript) which must export a [test object model](https://github.com/test-runner-js/test-object-model) instance. This test file can be run natively (no build or transpilation step required) in Node.js, the browser (in headless Chromium) or both (isomorphic).
 
-Trivial example. If a test function throws or returns a rejected promise it is considered a fail.
+Add tests to the model by invoking [`tom.test`](https://github.com/test-runner-js/test-object-model/blob/master/docs/API.md#module_test-object-model--Tom+test) with a name and test function. Trivial example. If a test function throws or returns a rejected promise it is considered a fail.
 
 ```js
 const { Tom } = require('test-runner')
@@ -81,7 +81,7 @@ tom.test('REST API should return the current todo item', async function () {
 module.exports = tom
 ```
 
-Run the tests using test-runner.
+Run the test file using test-runner.
 
 ```
 $ npx test-runner test.js
