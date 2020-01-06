@@ -99,10 +99,10 @@ const halt = require('./lib/util').halt
       const results = Array.from(runner.tom).map(tom => tom.name)
       a.deepStrictEqual(results, [
         'test-runner',
-        'no-name-one',
+        'test/fixture/no-tom-names/no-name-one.js',
         'one',
         'two',
-        'no-name-two',
+        'test/fixture/no-tom-names/no-name-two.js',
         'one',
         'two'
       ])

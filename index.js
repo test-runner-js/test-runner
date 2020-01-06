@@ -158,6 +158,13 @@ class TestRunnerCli {
     this.errorLog(pkg.version)
   }
 
+  async printTree (tom) {
+    const path = await this.loadModule('path')
+    const TreeView = await this.loadModule(path.resolve(__dirname, './lib/tree.js'))
+    const treeView = new TreeView(tom)
+    this.errorLog(treeView.toString())
+  }
+
   async expandGlobs (files) {
     const FileSet = await this.loadModule('file-set')
     const flatten = await this.loadModule('reduce-flatten')
@@ -190,10 +197,11 @@ class TestRunnerCli {
       const tom = await this.loadModule(path.resolve(process.cwd(), file))
       if (tom) {
         if (tom.name === 'tom') {
+          /* use the file basename instead of the default */
           const path = await this.loadModule('path')
           const extname = path.extname(file)
           const basename = path.basename(file, extname)
-          tom.name = basename
+          tom.name = file
         }
         toms.push(tom)
       } else {
@@ -226,11 +234,11 @@ class TestRunnerCli {
 
     /* --help */
     if (options.help) {
-      return this.printUsage()
+      await this.printUsage()
 
     /* --version */
     } else if (options.version) {
-      return this.printVersion()
+      await this.printVersion()
 
     /* --files */
     } else {
@@ -245,19 +253,16 @@ class TestRunnerCli {
           }
           /* --tree */
           if (options.tree) {
-            const path = await this.loadModule('path')
-            const TreeView = await this.loadModule(path.resolve(__dirname, './lib/tree.js'))
-            const treeView = new TreeView(tom)
-            this.errorLog(treeView.toString())
+            await this.printTree(tom)
           } else {
             return this.runTests(tom, options)
           }
         } else {
           this.errorLog('one or more input files required')
-          return this.printUsage()
+          await this.printUsage()
         }
       } else {
-        return this.printUsage()
+        await this.printUsage()
       }
     }
   }
