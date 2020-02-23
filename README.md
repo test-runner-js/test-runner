@@ -24,7 +24,7 @@ $ test-runner [<options>] <file> ...
 
 A test file is a module (either CommonJS or ECMAScript) which must export a [test object model](https://github.com/test-runner-js/test-object-model) instance. This test file can be run natively (no build or transpilation step required) in Node.js, the browser (in headless Chromium) or both (isomorphic).
 
-Add tests to the model by invoking [`tom.test`](https://github.com/test-runner-js/test-object-model/blob/master/docs/API.md#module_test-object-model--Tom+test) with a name and test function. Trivial example. If a test function throws or returns a rejected promise it is considered a fail.
+Add tests to the model by invoking [`tom.test`](https://github.com/test-runner-js/test-object-model/blob/master/docs/API.md#module_test-object-model--Tom+test) with a name and test function. Trivial example. **If a test function throws or returns a rejected promise it is considered a fail, otherwise a pass**.
 
 ```js
 const { Tom } = require('test-runner')
