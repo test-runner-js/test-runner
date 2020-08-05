@@ -1,12 +1,13 @@
-[![view on npm](https://img.shields.io/npm/v/test-runner.svg)](https://www.npmjs.org/package/test-runner)
-[![npm module downloads](https://img.shields.io/npm/dt/test-runner.svg)](https://www.npmjs.org/package/test-runner)
+[![view on npm](https://badgen.net/npm/v/test-runner)](https://www.npmjs.org/package/test-runner)
+[![npm module downloads](https://badgen.net/npm/dt/test-runner)](https://www.npmjs.org/package/test-runner)
+[![Gihub repo dependents](https://badgen.net/github/dependents-repo/test-runner-js/test-runner)](https://github.com/test-runner-js/test-runner/network/dependents?dependent_type=REPOSITORY)
+[![Gihub package dependents](https://badgen.net/github/dependents-pkg/test-runner-js/test-runner)](https://github.com/test-runner-js/test-runner/network/dependents?dependent_type=PACKAGE)
 [![Build Status](https://travis-ci.org/test-runner-js/test-runner.svg?branch=master)](https://travis-ci.org/test-runner-js/test-runner)
-[![Dependency Status](https://badgen.net/david/dep/test-runner-js/test-runner)](https://david-dm.org/test-runner-js/test-runner)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](https://github.com/feross/standard)
 
-***This project and documentation are a WIP***
-
 # test-runner
+
+***This project and documentation are a WIP***
 
 Fully-featured, lightweight command-line test runner. Part of a suite of tools to help the full-stack JavaScript engineer create and test modern, isomorphic code.
 
