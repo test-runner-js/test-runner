@@ -9,6 +9,7 @@ import Tom from 'test-object-model'
 import TestRunnerCore from 'test-runner-core'
 import * as fs from 'fs/promises'
 import getModulePaths from 'current-module-paths'
+import { pathToFileURL } from 'url'
 
 const modulePath = getModulePaths(import.meta.url)
 const __dirname = modulePath.__dirname
@@ -173,7 +174,7 @@ class TestRunnerCli {
   }
 
   async printTree (tom) {
-    const TreeView = await this.loadModule(path.resolve(__dirname, './lib/tree.mjs'))
+    const TreeView = await this.loadModule(pathToFileURL(path.resolve(__dirname, './lib/tree.mjs')))
     const treeView = new TreeView(tom)
     this.errorLog(treeView.toString())
   }
@@ -204,7 +205,7 @@ class TestRunnerCli {
   async getTom (files, options) {
     const toms = []
     for (const file of files) {
-      const tom = await this.loadModule(path.resolve(process.cwd(), file))
+      const tom = await this.loadModule(pathToFileURL(path.resolve(process.cwd(), file)))
       if (tom) {
         if (tom.name === 'tom') {
           /* use the file basename instead of the default */
