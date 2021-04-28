@@ -1,4 +1,4 @@
-import { loadModuleResolvedFrom, loadModulePathRelativeTo } from 'load-module'
+import { loadModuleResolvedFrom, loadModuleRelativeTo } from 'load-module'
 import commandLineArgs from 'command-line-args'
 import commandLineUsage from 'command-line-usage'
 import path from 'path'
@@ -91,7 +91,7 @@ class TestRunnerCli {
     let mod
     mod = await loadModuleResolvedFrom(moduleId, [process.cwd(), __dirname])
     if (mod === null) {
-      mod = await loadModulePathRelativeTo(moduleId, [process.cwd()])
+      mod = await loadModuleRelativeTo(moduleId, [process.cwd()])
     }
     if (mod === null) {
       throw new Error('Module not found: ' + moduleId)
