@@ -1,6 +1,8 @@
-const TestRunnerCli = require('../')
-const a = require('assert')
-const halt = require('./lib/util').halt
+import TestRunnerCli from 'test-runner'
+import assert from 'assert'
+import { halt } from './lib/util.mjs'
+import commandLineArgs from 'command-line-args'
+const a = assert.strict
 
 { /* no args: print usage guide */
   const actuals = []
@@ -45,7 +47,7 @@ const halt = require('./lib/util').halt
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
-      return commandLineArgs(this.optionDefinitions, { argv: ['test/fixture/one.js', '--tree'] })
+      return commandLineArgs(this.optionDefinitions, { argv: ['test/fixture/one.mjs', '--tree'] })
     }
   }
   const cli = new TestRunnerTest({ errorLog })

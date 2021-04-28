@@ -1,10 +1,13 @@
-#!/bin/sh
-":" //# comment; exec /usr/bin/env node --no-warnings "$0" "$@"
+#!/usr/bin/env node
+import TestRunner from 'test-runner'
+import util from 'util'
+util.inspect.defaultOptions.depth = 6
+util.inspect.defaultOptions.breakLength = process.stdout.columns
+util.inspect.defaultOptions.maxArrayLength = Infinity
 
-const TestRunner = require('../')
 const cli = new TestRunner()
 cli.start().catch(err => {
-  console.error(require('util').inspect(err, { depth: 6, colors: true }))
+  console.error(util.inspect(err, { depth: 6, colors: true }))
   process.exitCode = 1
 })
 
@@ -14,7 +17,7 @@ process.on('uncaughtException', (err, origin) => {
   process.exit(1)
 })
 process.on('unhandledRejection', (reason, promise) => {
-  cli.errorLog(`\nAn unhandledRejection was thrown. Please ensure the rejecting promise is returned from the test function.\n`)
+  cli.errorLog('\nAn unhandledRejection was thrown. Please ensure the rejecting promise is returned from the test function.\n')
   cli.errorLog(reason)
   process.exit(1)
 })

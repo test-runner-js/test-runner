@@ -1,7 +1,8 @@
-const Tom = require('test-object-model')
-const EventEmitter = require('events')
+import Tom from 'test-object-model'
+import EventEmitter from 'events'
 
-const tom = module.exports = new Tom()
+const tom = new Tom('Fixture one')
+export default tom
 
 tom.skip('unhandled error event', () => {
   const emitter = new EventEmitter()

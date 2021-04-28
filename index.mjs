@@ -1,3 +1,18 @@
+import { loadModuleResolvedFrom, loadModulePathRelativeTo } from 'load-module'
+import commandLineArgs from 'command-line-args'
+import commandLineUsage from 'command-line-usage'
+import path from 'path'
+import FileSet from 'file-set'
+import flatten from 'reduce-flatten'
+import walkBack from 'walk-back'
+import Tom from 'test-object-model'
+import TestRunnerCore from 'test-runner-core'
+import * as fs from 'fs/promises'
+import getModulePaths from 'current-module-paths'
+
+const modulePath = getModulePaths(import.meta.url)
+const __dirname = modulePath.__dirname
+
 /**
  * @module test-runner
  */
@@ -10,8 +25,7 @@ class TestRunnerCli {
    * @param {object} [optons]
    * @param {function} [optons.errorLog]
    */
-  constructor (options) {
-    options = options || {}
+  constructor (options = {}) {
     this.options = options
     this.errorLog = options.errorLog || console.error
     this.optionDefinitions = [
@@ -65,28 +79,31 @@ class TestRunnerCli {
         name: 'debug',
         type: Boolean,
         description: "Prints debug output. Use this when a test is misbehaving and you'd like to know why."
-      },
+      }
     ]
 
     this.viewOptionDefinitions = []
   }
 
-  async loadModule (moduleId, useLoadModule) {
-    if (useLoadModule) {
-      const loadModule = require('load-module')
-      return loadModule(moduleId, { paths: ['.', __dirname] })
-    } else {
-      if (/\.mjs$/.test(moduleId)) {
-        const mod = await import(moduleId)
-        return mod.default
-      } else {
-        return require(moduleId)
-      }
+  /* Encapsulate this in load-module */
+  async loadUserModule (moduleId) {
+    let mod
+    mod = await loadModuleResolvedFrom(moduleId, [process.cwd(), __dirname])
+    if (mod === null) {
+      mod = await loadModulePathRelativeTo(moduleId, [process.cwd()])
     }
+    if (mod === null) {
+      throw new Error('Module not found: ' + moduleId)
+    }
+    return mod
+  }
+
+  async loadModule (moduleId) {
+    const mod = await import(moduleId)
+    return mod.default
   }
 
   async getViewClass (options = {}) {
-    const path = await this.loadModule('path')
     let viewModule
     if (options.view) {
       if (options.view === 'live') {
@@ -94,7 +111,7 @@ class TestRunnerCli {
       } else if (options.view === 'oneline') {
         viewModule = await this.loadModule('@test-runner/oneline-view')
       } else {
-        viewModule = await this.loadModule(options.view, true)
+        viewModule = await this.loadUserModule(options.view)
       }
     } else {
       viewModule = await this.loadModule('@test-runner/default-view')
@@ -104,7 +121,6 @@ class TestRunnerCli {
 
   async getAllOptionDefinitions () {
     const allOptionDefinitions = this.optionDefinitions.slice()
-    const commandLineArgs = await this.loadModule('command-line-args')
     const coreOptions = commandLineArgs(this.optionDefinitions, { camelCase: true, partial: true })
     const ViewClass = await this.getViewClass(coreOptions)
     if (ViewClass && ViewClass.optionDefinitions) {
@@ -116,7 +132,6 @@ class TestRunnerCli {
   }
 
   async getOptions () {
-    const commandLineArgs = await this.loadModule('command-line-args')
     const options = Object.assign({}, this.options, commandLineArgs(this.allOptionDefinitions, { camelCase: true }))
     if (!options.silent) {
       const ViewClass = await this.getViewClass(options)
@@ -127,7 +142,6 @@ class TestRunnerCli {
   }
 
   async printUsage () {
-    const commandLineUsage = await this.loadModule('command-line-usage')
     this.errorLog(commandLineUsage([
       {
         header: 'test-runner',
@@ -153,21 +167,18 @@ class TestRunnerCli {
   }
 
   async printVersion () {
-    const path = await this.loadModule('path')
-    const pkg = await this.loadModule(path.resolve(__dirname, 'package.json'))
-    this.errorLog(pkg.version)
+    const pkgFile = await fs.readFile(path.resolve(__dirname, 'package.json'), 'utf8')
+    const pkg = JSON.parse(pkgFileg)
+    this.errorLog('pkg.version')
   }
 
   async printTree (tom) {
-    const path = await this.loadModule('path')
-    const TreeView = await this.loadModule(path.resolve(__dirname, './lib/tree.js'))
+    const TreeView = await this.loadModule(path.resolve(__dirname, './lib/tree.mjs'))
     const treeView = new TreeView(tom)
     this.errorLog(treeView.toString())
   }
 
   async expandGlobs (files) {
-    const FileSet = await this.loadModule('file-set')
-    const flatten = await this.loadModule('reduce-flatten')
     return files
       .map(glob => {
         const fileSet = new FileSet(glob)
@@ -180,25 +191,23 @@ class TestRunnerCli {
   }
 
   async getPackageName () {
-    const walkBack = await this.loadModule('walk-back')
     const packagePath = walkBack(process.cwd(), 'package.json')
     let name
     if (packagePath) {
-      const pkg = await this.loadModule(packagePath)
+      const pkgFile = await fs.readFile(packagePath, 'utf8')
+      const pkg = JSON.parse(pkgFile)
       name = pkg.name
     }
     return name
   }
 
   async getTom (files, options) {
-    const path = await this.loadModule('path')
     const toms = []
     for (const file of files) {
       const tom = await this.loadModule(path.resolve(process.cwd(), file))
       if (tom) {
         if (tom.name === 'tom') {
           /* use the file basename instead of the default */
-          const path = await this.loadModule('path')
           const extname = path.extname(file)
           const basename = path.basename(file, extname)
           tom.name = file
@@ -209,13 +218,10 @@ class TestRunnerCli {
       }
     }
     const name = await this.getPackageName()
-    const Tom = await this.loadModule('test-object-model')
     return Tom.combine(toms, name, options)
   }
 
   async runTests (tom, options) {
-    const TestRunnerCore = await this.loadModule('test-runner-core')
-    const path = await this.loadModule('path')
     const runner = new TestRunnerCore(tom, { view: options._view, debug: options.debug })
     runner.on('fail', () => {
       process.exitCode = 1
@@ -268,6 +274,6 @@ class TestRunnerCli {
   }
 }
 
-TestRunnerCli.Tom = require('test-object-model')
+TestRunnerCli.Tom = Tom
 
-module.exports = TestRunnerCli
+export default TestRunnerCli

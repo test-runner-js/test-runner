@@ -1,19 +1,20 @@
-const TestRunnerCli = require('../')
-const a = require('assert')
-const halt = require('./lib/util').halt
+import TestRunnerCli from 'test-runner'
+import assert from 'assert'
+import { halt } from './lib/util.mjs'
+import commandLineArgs from 'command-line-args'
+const a = assert.strict
 
 { /* single file run */
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
-      const commandLineArgs = await this.loadModule('command-line-args')
-      return commandLineArgs(this.optionDefinitions, { argv: ['test/fixture/one.js', '--silent'] })
+      return commandLineArgs(this.optionDefinitions, { argv: ['test/fixture/one.mjs', '--silent'] })
     }
   }
   const cli = new TestRunnerTest()
   cli.start()
     .then(runner => {
-      a.strictEqual(runner.tom.children[0].result, 1)
-      a.strictEqual(runner.tom.children[1].result, 2)
+      a.equal(runner.tom.children[0].result, 1)
+      a.equal(runner.tom.children[1].result, 2)
     })
     .catch(halt)
 }
@@ -22,14 +23,14 @@ const halt = require('./lib/util').halt
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
-      return commandLineArgs(this.optionDefinitions, { argv: ['--silent', 'test/fixture/three.js', 'test/fixture/two.js'] })
+      return commandLineArgs(this.optionDefinitions, { argv: ['--silent', 'test/fixture/three.mjs', 'test/fixture/two.mjs'] })
     }
   }
   const cli = new TestRunnerTest()
   cli.start()
     .then(runner => {
       const results = Array.from(runner.tom).map(tom => tom.result).filter(r => r)
-      a.deepStrictEqual(results, [ 5, 6, 3, 4 ])
+      a.deepStrictEqual(results, [5, 6, 3, 4])
     })
     .catch(halt)
 }
@@ -38,14 +39,14 @@ const halt = require('./lib/util').halt
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
-      return commandLineArgs(this.optionDefinitions, { argv: ['--silent', 'test/fixture/four.js', 'test/fixture/only.js'] })
+      return commandLineArgs(this.optionDefinitions, { argv: ['--silent', 'test/fixture/four.mjs', 'test/fixture/only.mjs'] })
     }
   }
   const cli = new TestRunnerTest()
   cli.start()
     .then(runner => {
       const results = Array.from(runner.tom).map(tom => tom.result).filter(r => r)
-      a.deepStrictEqual(results, [ 6 ])
+      a.deepStrictEqual(results, [6])
     })
     .catch(halt)
 }
@@ -54,15 +55,15 @@ const halt = require('./lib/util').halt
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
-      return commandLineArgs(this.optionDefinitions, { argv: ['--silent', 'test/fixture/fail.js'] })
+      return commandLineArgs(this.optionDefinitions, { argv: ['--silent', 'test/fixture/fail.mjs'] })
     }
   }
   const runnerCli = new TestRunnerTest()
   const origExitCode = process.exitCode
-  a.strictEqual(process.exitCode, undefined)
+  a.equal(process.exitCode, undefined)
   runnerCli.start()
     .then(runner => {
-      a.strictEqual(process.exitCode, 1)
+      a.equal(process.exitCode, 1)
       process.exitCode = origExitCode
     })
     .catch(halt)
@@ -72,7 +73,7 @@ const halt = require('./lib/util').halt
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
-      return commandLineArgs(this.optionDefinitions, { argv: ['test/fixture/no-tom-exported.js', '--silent'] })
+      return commandLineArgs(this.optionDefinitions, { argv: ['test/fixture/no-tom-exported.mjs', '--silent'] })
     }
   }
   const cli = new TestRunnerTest()
@@ -81,7 +82,7 @@ const halt = require('./lib/util').halt
       throw new Error('should not reach here')
     })
     .catch(err => {
-      a.ok(/valid tom required/i.test(err.message))
+      a.ok(/No TOM exported/i.test(err.message))
     })
     .catch(halt)
 }
@@ -90,7 +91,7 @@ const halt = require('./lib/util').halt
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
-      return commandLineArgs(this.optionDefinitions, { argv: ['--debug', 'test/fixture/no-tom-names/no-name-one.js', 'test/fixture/no-tom-names/no-name-two.js'] })
+      return commandLineArgs(this.optionDefinitions, { argv: ['--debug', 'test/fixture/no-tom-names/no-name-one.mjs', 'test/fixture/no-tom-names/no-name-two.mjs'] })
     }
   }
   const cli = new TestRunnerTest()
@@ -99,10 +100,10 @@ const halt = require('./lib/util').halt
       const results = Array.from(runner.tom).map(tom => tom.name)
       a.deepStrictEqual(results, [
         'test-runner',
-        'test/fixture/no-tom-names/no-name-one.js',
+        'test/fixture/no-tom-names/no-name-one.mjs',
         'one',
         'two',
-        'test/fixture/no-tom-names/no-name-two.js',
+        'test/fixture/no-tom-names/no-name-two.mjs',
         'one',
         'two'
       ])
