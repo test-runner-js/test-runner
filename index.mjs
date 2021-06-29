@@ -182,7 +182,9 @@ class TestRunnerCli {
   async expandGlobs (files) {
     return files
       .map(glob => {
-        const fileSet = new FileSet(glob)
+        const fileSet = new FileSet()
+        fileSet.add(glob)
+        console.log('GLOB', glob, fileSet)
         if (fileSet.notExisting.length) {
           throw new Error('These files do not exist: ' + fileSet.notExisting.join(', '))
         }

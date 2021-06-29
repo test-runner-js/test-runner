@@ -7,8 +7,10 @@
     "test-runner": "bin/cli.mjs"
   },
   "repository": "https://github.com/test-runner-js/test-runner",
-  "main": "./index.mjs",
-  "exports": "./index.mjs",
+  "exports": {
+    "import": "./index.mjs",
+    "require": "./dist/index.cjs"
+  },
   "keywords": [
     "test-runner",
     "test",
@@ -33,7 +35,8 @@
   ],
   "scripts": {
     "test": "node test/tests.mjs",
-    "docs": "jsdoc2md index.js > docs/API.md"
+    "docs": "jsdoc2md index.js > docs/API.md",
+    "dist": "rollup --exports auto -f cjs -o dist/index.cjs index.mjs"
   },
   "dependencies": {
     "@test-runner/default-view": "^0.5.4",
@@ -42,15 +45,16 @@
     "command-line-args": "^5.1.1",
     "command-line-usage": "^6.1.1",
     "current-module-paths": "^0.1.0",
-    "file-set": "^4.0.2",
-    "load-module": "^4.0.0-1",
-    "reduce-flatten": "^3.0.0",
+    "file-set": "^5.0.1",
+    "load-module": "^4.0.1",
+    "reduce-flatten": "^3.0.1",
     "test-object-model": "^0.7.1",
     "test-runner-core": "^0.9.0",
     "walk-back": "^5.0.0"
   },
   "devDependencies": {
     "jsdoc-to-markdown": "^7.0.1",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "rollup": "^2.52.3"
   }
 }
