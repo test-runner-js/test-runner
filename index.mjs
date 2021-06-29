@@ -3,7 +3,6 @@ import commandLineArgs from 'command-line-args'
 import commandLineUsage from 'command-line-usage'
 import path from 'path'
 import FileSet from 'file-set'
-import flatten from 'reduce-flatten'
 import walkBack from 'walk-back'
 import Tom from 'test-object-model'
 import TestRunnerCore from 'test-runner-core'
@@ -169,8 +168,8 @@ class TestRunnerCli {
 
   async printVersion () {
     const pkgFile = await fs.readFile(path.resolve(__dirname, 'package.json'), 'utf8')
-    const pkg = JSON.parse(pkgFileg)
-    this.errorLog('pkg.version')
+    const pkg = JSON.parse(pkgFile)
+    this.errorLog(pkg.version)
   }
 
   async printTree (tom) {
@@ -211,9 +210,6 @@ class TestRunnerCli {
       const tom = await this.loadModule(pathToFileURL(path.resolve(process.cwd(), file)))
       if (tom) {
         if (tom.name === 'tom') {
-          /* use the file basename instead of the default */
-          const extname = path.extname(file)
-          const basename = path.basename(file, extname)
           tom.name = file
         }
         toms.push(tom)

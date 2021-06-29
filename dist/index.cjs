@@ -5,7 +5,6 @@ var commandLineArgs = require('command-line-args');
 var commandLineUsage = require('command-line-usage');
 var path = require('path');
 var FileSet = require('file-set');
-require('reduce-flatten');
 var walkBack = require('walk-back');
 var Tom = require('test-object-model');
 var TestRunnerCore = require('test-runner-core');
@@ -202,9 +201,9 @@ class TestRunnerCli {
   }
 
   async printVersion () {
-    await fs__namespace.readFile(path__default['default'].resolve(__dirname$1, 'package.json'), 'utf8');
-    JSON.parse(pkgFileg);
-    this.errorLog('pkg.version');
+    const pkgFile = await fs__namespace.readFile(path__default['default'].resolve(__dirname$1, 'package.json'), 'utf8');
+    const pkg = JSON.parse(pkgFile);
+    this.errorLog(pkg.version);
   }
 
   async printTree (tom) {
@@ -245,9 +244,6 @@ class TestRunnerCli {
       const tom = await this.loadModule(url.pathToFileURL(path__default['default'].resolve(process.cwd(), file)));
       if (tom) {
         if (tom.name === 'tom') {
-          /* use the file basename instead of the default */
-          const extname = path__default['default'].extname(file);
-          path__default['default'].basename(file, extname);
           tom.name = file;
         }
         toms.push(tom);

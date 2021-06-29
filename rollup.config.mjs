@@ -6,8 +6,8 @@ export default [
     input: 'index.mjs',
     output: {
       file: 'dist/index.cjs',
-      format: 'cjs',
-      exports: 'auto'
+      format: 'cjs'
+      // exports: 'auto'
     },
     external: [],
     plugins: [nodeResolve({ preferBuiltins: true }), commonJs()]

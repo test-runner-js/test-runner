@@ -1,7 +1,6 @@
 import TestRunnerCli from 'test-runner'
 import assert from 'assert'
 import { halt } from './lib/util.mjs'
-import commandLineArgs from 'command-line-args'
 const a = assert.strict
 
 { /* testRunnerCli.getTom() - should default to file names */

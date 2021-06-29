@@ -48,7 +48,6 @@
     "current-module-paths": "^0.1.0",
     "file-set": "^5.0.1",
     "load-module": "^4.0.1",
-    "reduce-flatten": "^3.0.1",
     "test-object-model": "^0.7.1",
     "test-runner-core": "^0.9.0",
     "walk-back": "^5.0.0"
@@ -57,5 +56,12 @@
     "jsdoc-to-markdown": "^7.0.1",
     "node-fetch": "^2.6.1",
     "rollup": "^2.52.3"
+  },
+  "standard": {
+    "ignore": [
+      "dist",
+      "tmp"
+    ],
+    "envs": []
   }
 }
