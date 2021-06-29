@@ -31,7 +31,8 @@
   "files": [
     "bin",
     "lib",
-    "index.mjs"
+    "index.mjs",
+    "dist"
   ],
   "scripts": {
     "test": "node test/tests.mjs",

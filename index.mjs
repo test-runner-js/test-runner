@@ -179,18 +179,19 @@ class TestRunnerCli {
     this.errorLog(treeView.toString())
   }
 
-  async expandGlobs (files) {
-    return files
-      .map(glob => {
-        const fileSet = new FileSet()
-        fileSet.add(glob)
-        console.log('GLOB', glob, fileSet)
-        if (fileSet.notExisting.length) {
-          throw new Error('These files do not exist: ' + fileSet.notExisting.join(', '))
-        }
-        return fileSet.files
-      })
-      .reduce(flatten, [])
+  async expandGlobs (globs) {
+    const result = new Set()
+    for (const glob of globs) {
+      const fileSet = new FileSet()
+      await fileSet.add(glob)
+      if (fileSet.notExisting.length) {
+        throw new Error('These files do not exist: ' + fileSet.notExisting.join(', '))
+      }
+      for (const file of fileSet.files) {
+        result.add(file)
+      }
+    }
+    return Array.from(result.values())
   }
 
   async getPackageName () {

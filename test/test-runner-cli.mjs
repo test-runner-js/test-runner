@@ -60,3 +60,11 @@ const a = assert.strict
     })
     .catch(halt)
 }
+
+{ /* testRunnerCli.expandGlobs() */
+  const cli = new TestRunnerCli()
+  cli.expandGlobs(['package.json'])
+    .then(result => {
+      a.deepEqual(result, ['package.json'])
+    })
+}

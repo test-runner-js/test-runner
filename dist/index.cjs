@@ -5,7 +5,7 @@ var commandLineArgs = require('command-line-args');
 var commandLineUsage = require('command-line-usage');
 var path = require('path');
 var FileSet = require('file-set');
-var flatten = require('reduce-flatten');
+require('reduce-flatten');
 var walkBack = require('walk-back');
 var Tom = require('test-object-model');
 var TestRunnerCore = require('test-runner-core');
@@ -39,7 +39,6 @@ var commandLineArgs__default = /*#__PURE__*/_interopDefaultLegacy(commandLineArg
 var commandLineUsage__default = /*#__PURE__*/_interopDefaultLegacy(commandLineUsage);
 var path__default = /*#__PURE__*/_interopDefaultLegacy(path);
 var FileSet__default = /*#__PURE__*/_interopDefaultLegacy(FileSet);
-var flatten__default = /*#__PURE__*/_interopDefaultLegacy(flatten);
 var walkBack__default = /*#__PURE__*/_interopDefaultLegacy(walkBack);
 var Tom__default = /*#__PURE__*/_interopDefaultLegacy(Tom);
 var TestRunnerCore__default = /*#__PURE__*/_interopDefaultLegacy(TestRunnerCore);
@@ -214,18 +213,19 @@ class TestRunnerCli {
     this.errorLog(treeView.toString());
   }
 
-  async expandGlobs (files) {
-    return files
-      .map(glob => {
-        const fileSet = new FileSet__default['default']();
-        fileSet.add(glob);
-        console.log('GLOB', glob, fileSet);
-        if (fileSet.notExisting.length) {
-          throw new Error('These files do not exist: ' + fileSet.notExisting.join(', '))
-        }
-        return fileSet.files
-      })
-      .reduce(flatten__default['default'], [])
+  async expandGlobs (globs) {
+    const result = new Set();
+    for (const glob of globs) {
+      const fileSet = new FileSet__default['default']();
+      await fileSet.add(glob);
+      if (fileSet.notExisting.length) {
+        throw new Error('These files do not exist: ' + fileSet.notExisting.join(', '))
+      }
+      for (const file of fileSet.files) {
+        result.add(file);
+      }
+    }
+    return Array.from(result.values())
   }
 
   async getPackageName () {
