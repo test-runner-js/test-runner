@@ -1,4 +1,4 @@
-import Tom from 'test-object-model'
+import Tom from '@test-runner/tom'
 import EventEmitter from 'events'
 
 const tom = new Tom('Fixture one')

@@ -1,4 +1,4 @@
-import Tom from 'test-object-model'
+import Tom from '@test-runner/tom'
 const tom = new Tom()
 export default tom
 tom.test('three', () => 3)
