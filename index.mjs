@@ -6,12 +6,13 @@ import FileSet from 'file-set'
 import walkBack from 'walk-back'
 import Tom from '@test-runner/tom'
 import TestRunnerCore from '@test-runner/core'
-import * as fs from 'fs/promises'
+import * as origFs from 'fs'
 import getModulePaths from 'current-module-paths'
 import { pathToFileURL } from 'url'
 
 const modulePath = getModulePaths(import.meta.url)
 const __dirname = modulePath.__dirname
+const fs = origFs.promises
 
 /**
  * @module test-runner
