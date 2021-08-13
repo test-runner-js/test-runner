@@ -35,7 +35,8 @@
     "dist"
   ],
   "scripts": {
-    "test": "node test/tests.mjs",
+    "test": "npm run dist && npm run test:ci",
+    "test:ci": "node test/tests.mjs && node test/require.cjs",
     "docs": "jsdoc2md index.js > docs/API.md",
     "dist": "rollup -c"
   },
@@ -45,19 +46,17 @@
     "@test-runner/live-view": "^0.1.7",
     "@test-runner/oneline-view": "^0.1.4",
     "@test-runner/tom": "^0.8.0",
-    "command-line-args": "^5.1.3",
+    "command-line-args": "^5.2.0",
     "command-line-usage": "^6.1.1",
-    "current-module-paths": "^1.0.0",
-    "file-set": "^5.1.1",
-    "load-module": "^4.0.1",
+    "current-module-paths": "^1.1.0",
+    "file-set": "^5.1.2",
+    "load-module": "^4.2.1",
     "walk-back": "^5.0.0"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^19.0.1",
-    "@rollup/plugin-node-resolve": "^13.0.2",
     "jsdoc-to-markdown": "^7.0.1",
     "node-fetch": "^2.6.1",
-    "rollup": "^2.53.3"
+    "rollup": "^2.56.2"
   },
   "standard": {
     "ignore": [
