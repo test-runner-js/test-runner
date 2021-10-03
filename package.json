@@ -4,11 +4,12 @@
   "version": "0.9.8",
   "description": "Fully-featured, lightweight command-line test runner",
   "bin": {
-    "test-runner": "bin/cli.mjs"
+    "test-runner": "bin/cli.js"
   },
   "repository": "https://github.com/test-runner-js/test-runner",
+  "type": "module",
   "exports": {
-    "import": "./index.mjs",
+    "import": "./index.js",
     "require": "./dist/index.cjs"
   },
   "keywords": [
@@ -31,32 +32,32 @@
   "files": [
     "bin",
     "lib",
-    "index.mjs",
+    "index.js",
     "dist"
   ],
   "scripts": {
     "test": "npm run dist && npm run test:ci",
-    "test:ci": "node test/tests.mjs && node test/require.cjs",
+    "test:ci": "node test/tests.js && node test/require.cjs",
     "docs": "jsdoc2md index.js > docs/API.md",
     "dist": "rollup -c"
   },
   "dependencies": {
     "@test-runner/core": "^0.10.0",
-    "@test-runner/default-view": "^0.6.0",
-    "@test-runner/live-view": "^0.1.7",
+    "@test-runner/default-view": "^0.6.1",
+    "@test-runner/live-view": "^0.2.0",
     "@test-runner/oneline-view": "^0.1.4",
-    "@test-runner/tom": "^0.8.0",
+    "@test-runner/tom": "^0.8.1",
     "command-line-args": "^5.2.0",
     "command-line-usage": "^6.1.1",
     "current-module-paths": "^1.1.0",
     "file-set": "^5.1.2",
     "load-module": "^4.2.1",
-    "walk-back": "^5.0.0"
+    "walk-back": "^5.1.0"
   },
   "devDependencies": {
     "jsdoc-to-markdown": "^7.0.1",
-    "node-fetch": "^2.6.1",
-    "rollup": "^2.56.2"
+    "node-fetch": "^3.0.0",
+    "rollup": "^2.58.0"
   },
   "standard": {
     "ignore": [

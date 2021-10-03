@@ -174,7 +174,7 @@ class TestRunnerCli {
   }
 
   async printTree (tom) {
-    const TreeView = await this.loadModule(pathToFileURL(path.resolve(__dirname, './lib/tree.mjs')))
+    const TreeView = await this.loadModule(pathToFileURL(path.resolve(__dirname, './lib/tree.js')))
     const treeView = new TreeView(tom)
     this.errorLog(treeView.toString())
   }

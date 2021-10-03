@@ -3,7 +3,7 @@ const a = require('assert').strict
 const commandLineArgs = require('command-line-args')
 
 async function start () {
-  const { halt } = await import('./lib/util.mjs')
+  const { halt } = await import('./lib/util.js')
 
   const actuals = []
   function errorLog (msg) {

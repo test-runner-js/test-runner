@@ -23,14 +23,12 @@ function _interopNamespace(e) {
         var d = Object.getOwnPropertyDescriptor(e, k);
         Object.defineProperty(n, k, d.get ? d : {
           enumerable: true,
-          get: function () {
-            return e[k];
-          }
+          get: function () { return e[k]; }
         });
       }
     });
   }
-  n['default'] = e;
+  n["default"] = e;
   return Object.freeze(n);
 }
 
@@ -44,7 +42,7 @@ var TestRunnerCore__default = /*#__PURE__*/_interopDefaultLegacy(TestRunnerCore)
 var origFs__namespace = /*#__PURE__*/_interopNamespace(origFs);
 var getModulePaths__default = /*#__PURE__*/_interopDefaultLegacy(getModulePaths);
 
-const modulePath = getModulePaths__default['default']((typeof document === 'undefined' ? new (require('u' + 'rl').URL)('file:' + __filename).href : (document.currentScript && document.currentScript.src || new URL('index.cjs', document.baseURI).href)));
+const modulePath = getModulePaths__default["default"]((typeof document === 'undefined' ? new (require('u' + 'rl').URL)('file:' + __filename).href : (document.currentScript && document.currentScript.src || new URL('index.cjs', document.baseURI).href)));
 const __dirname$1 = modulePath.__dirname;
 const fs = origFs__namespace.promises;
 
@@ -134,7 +132,7 @@ class TestRunnerCli {
   }
 
   async loadModule (moduleId) {
-    const mod = await Promise.resolve().then(function () { return /*#__PURE__*/_interopNamespace(require(moduleId)); });
+    const mod = await (function (t) { return Promise.resolve().then(function () { return /*#__PURE__*/_interopNamespace(require(t)); }); })(moduleId);
     return mod.default
   }
 
@@ -156,7 +154,7 @@ class TestRunnerCli {
 
   async getAllOptionDefinitions () {
     const allOptionDefinitions = this.optionDefinitions.slice();
-    const coreOptions = commandLineArgs__default['default'](this.optionDefinitions, { camelCase: true, partial: true });
+    const coreOptions = commandLineArgs__default["default"](this.optionDefinitions, { camelCase: true, partial: true });
     const ViewClass = await this.getViewClass(coreOptions);
     if (ViewClass && ViewClass.optionDefinitions) {
       this.viewOptionDefinitions = ViewClass.optionDefinitions() || [];
@@ -167,7 +165,7 @@ class TestRunnerCli {
   }
 
   async getOptions () {
-    const options = Object.assign({}, this.options, commandLineArgs__default['default'](this.allOptionDefinitions, { camelCase: true }));
+    const options = Object.assign({}, this.options, commandLineArgs__default["default"](this.allOptionDefinitions, { camelCase: true }));
     if (!options.silent) {
       const ViewClass = await this.getViewClass(options);
       const view = new ViewClass(options);
@@ -177,7 +175,7 @@ class TestRunnerCli {
   }
 
   async printUsage () {
-    this.errorLog(commandLineUsage__default['default']([
+    this.errorLog(commandLineUsage__default["default"]([
       {
         header: 'test-runner',
         content: 'Minimal, flexible, extensible command-line test runner.'
@@ -202,13 +200,13 @@ class TestRunnerCli {
   }
 
   async printVersion () {
-    const pkgFile = await fs.readFile(path__default['default'].resolve(__dirname$1, 'package.json'), 'utf8');
+    const pkgFile = await fs.readFile(path__default["default"].resolve(__dirname$1, 'package.json'), 'utf8');
     const pkg = JSON.parse(pkgFile);
     this.errorLog(pkg.version);
   }
 
   async printTree (tom) {
-    const TreeView = await this.loadModule(url.pathToFileURL(path__default['default'].resolve(__dirname$1, './lib/tree.mjs')));
+    const TreeView = await this.loadModule(url.pathToFileURL(path__default["default"].resolve(__dirname$1, './lib/tree.js')));
     const treeView = new TreeView(tom);
     this.errorLog(treeView.toString());
   }
@@ -216,7 +214,7 @@ class TestRunnerCli {
   async expandGlobs (globs) {
     const result = new Set();
     for (const glob of globs) {
-      const fileSet = new FileSet__default['default']();
+      const fileSet = new FileSet__default["default"]();
       await fileSet.add(glob);
       if (fileSet.notExisting.length) {
         throw new Error('These files do not exist: ' + fileSet.notExisting.join(', '))
@@ -229,7 +227,7 @@ class TestRunnerCli {
   }
 
   async getPackageName () {
-    const packagePath = walkBack__default['default'](process.cwd(), 'package.json');
+    const packagePath = walkBack__default["default"](process.cwd(), 'package.json');
     let name;
     if (packagePath) {
       const pkgFile = await fs.readFile(packagePath, 'utf8');
@@ -242,7 +240,7 @@ class TestRunnerCli {
   async getTom (files, options) {
     const toms = [];
     for (const file of files) {
-      const tom = await this.loadModule(url.pathToFileURL(path__default['default'].resolve(process.cwd(), file)));
+      const tom = await this.loadModule(url.pathToFileURL(path__default["default"].resolve(process.cwd(), file)));
       if (tom) {
         if (tom.name === 'tom') {
           tom.name = file;
@@ -253,11 +251,11 @@ class TestRunnerCli {
       }
     }
     const name = await this.getPackageName();
-    return Tom__default['default'].combine(toms, name, options)
+    return Tom__default["default"].combine(toms, name, options)
   }
 
   async runTests (tom, options) {
-    const runner = new TestRunnerCore__default['default'](tom, { view: options._view, debug: options.debug });
+    const runner = new TestRunnerCore__default["default"](tom, { view: options._view, debug: options.debug });
     runner.on('fail', () => {
       process.exitCode = 1;
     });
@@ -309,6 +307,6 @@ class TestRunnerCli {
   }
 }
 
-TestRunnerCli.Tom = Tom__default['default'];
+TestRunnerCli.Tom = Tom__default["default"];
 
 module.exports = TestRunnerCli;

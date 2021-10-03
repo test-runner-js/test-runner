@@ -1,6 +1,6 @@
-import('./start.mjs')
-import('./help.mjs')
-import('./test-runner-cli.mjs')
+import('./start.js')
+import('./help.js')
+import('./test-runner-cli.js')
 
 process.on('unhandledRejection', err => {
   console.error(err)

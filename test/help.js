@@ -1,6 +1,6 @@
 import TestRunnerCli from 'test-runner'
 import assert from 'assert'
-import { halt } from './lib/util.mjs'
+import { halt } from './lib/util.js'
 import commandLineArgs from 'command-line-args'
 const a = assert.strict
 
@@ -45,7 +45,7 @@ const a = assert.strict
   }
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
-      return commandLineArgs(this.optionDefinitions, { argv: ['test/fixture/one.mjs', '--tree'] })
+      return commandLineArgs(this.optionDefinitions, { argv: ['test/fixture/one.js', '--tree'] })
     }
   }
   const cli = new TestRunnerTest({ errorLog })

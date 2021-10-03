@@ -1,17 +1,17 @@
 import TestRunnerCli from 'test-runner'
 import assert from 'assert'
-import { halt } from './lib/util.mjs'
+import { halt } from './lib/util.js'
 const a = assert.strict
 
 { /* testRunnerCli.getTom() - should default to file names */
   const cli = new TestRunnerCli()
   const files = [
-    'test/fixture/no-tom-names/no-name-one.mjs',
-    'test/fixture/no-tom-names/no-name-two.mjs'
+    'test/fixture/no-tom-names/no-name-one.js',
+    'test/fixture/no-tom-names/no-name-two.js'
   ]
   cli.getTom(files).then(result => {
-    a.equal(result.children[0].name, 'test/fixture/no-tom-names/no-name-one.mjs')
-    a.equal(result.children[1].name, 'test/fixture/no-tom-names/no-name-two.mjs')
+    a.equal(result.children[0].name, 'test/fixture/no-tom-names/no-name-one.js')
+    a.equal(result.children[1].name, 'test/fixture/no-tom-names/no-name-two.js')
   })
 }
 
@@ -38,7 +38,7 @@ const a = assert.strict
 { /* testRunnerCli.getViewClass() - test-view */
   const cli = new TestRunnerCli()
   const options = {
-    view: 'test/fixture/test-view.mjs'
+    view: 'test/fixture/test-view.js'
   }
   cli.getViewClass(options).then(ViewClass => {
     a.equal(ViewClass.name, 'TestView')

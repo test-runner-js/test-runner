@@ -1,13 +1,13 @@
 import TestRunnerCli from 'test-runner'
 import assert from 'assert'
-import { halt } from './lib/util.mjs'
+import { halt } from './lib/util.js'
 import commandLineArgs from 'command-line-args'
 const a = assert.strict
 
 { /* single file run */
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
-      return commandLineArgs(this.optionDefinitions, { argv: ['test/fixture/one.mjs', '--silent'] })
+      return commandLineArgs(this.optionDefinitions, { argv: ['test/fixture/one.js', '--silent'] })
     }
   }
   const cli = new TestRunnerTest()
@@ -23,7 +23,7 @@ const a = assert.strict
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
-      return commandLineArgs(this.optionDefinitions, { argv: ['--silent', 'test/fixture/three.mjs', 'test/fixture/two.mjs'] })
+      return commandLineArgs(this.optionDefinitions, { argv: ['--silent', 'test/fixture/three.js', 'test/fixture/two.js'] })
     }
   }
   const cli = new TestRunnerTest()
@@ -39,7 +39,7 @@ const a = assert.strict
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
-      return commandLineArgs(this.optionDefinitions, { argv: ['--silent', 'test/fixture/four.mjs', 'test/fixture/only.mjs'] })
+      return commandLineArgs(this.optionDefinitions, { argv: ['--silent', 'test/fixture/four.js', 'test/fixture/only.js'] })
     }
   }
   const cli = new TestRunnerTest()
@@ -55,7 +55,7 @@ const a = assert.strict
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
-      return commandLineArgs(this.optionDefinitions, { argv: ['--silent', 'test/fixture/fail.mjs'] })
+      return commandLineArgs(this.optionDefinitions, { argv: ['--silent', 'test/fixture/fail.js'] })
     }
   }
   const runnerCli = new TestRunnerTest()
@@ -73,7 +73,7 @@ const a = assert.strict
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
-      return commandLineArgs(this.optionDefinitions, { argv: ['test/fixture/no-tom-exported.mjs', '--silent'] })
+      return commandLineArgs(this.optionDefinitions, { argv: ['test/fixture/no-tom-exported.js', '--silent'] })
     }
   }
   const cli = new TestRunnerTest()
@@ -91,7 +91,7 @@ const a = assert.strict
   class TestRunnerTest extends TestRunnerCli {
     async getOptions () {
       const commandLineArgs = await this.loadModule('command-line-args')
-      return commandLineArgs(this.optionDefinitions, { argv: ['--debug', 'test/fixture/no-tom-names/no-name-one.mjs', 'test/fixture/no-tom-names/no-name-two.mjs'] })
+      return commandLineArgs(this.optionDefinitions, { argv: ['--debug', 'test/fixture/no-tom-names/no-name-one.js', 'test/fixture/no-tom-names/no-name-two.js'] })
     }
   }
   const cli = new TestRunnerTest()
@@ -100,10 +100,10 @@ const a = assert.strict
       const results = Array.from(runner.tom).map(tom => tom.name)
       a.deepStrictEqual(results, [
         'test-runner',
-        'test/fixture/no-tom-names/no-name-one.mjs',
+        'test/fixture/no-tom-names/no-name-one.js',
         'one',
         'two',
-        'test/fixture/no-tom-names/no-name-two.mjs',
+        'test/fixture/no-tom-names/no-name-two.js',
         'one',
         'two'
       ])
