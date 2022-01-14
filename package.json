@@ -44,9 +44,9 @@
   "dependencies": {
     "@test-runner/core": "^0.10.0",
     "@test-runner/default-view": "^0.6.1",
-    "@test-runner/live-view": "^0.2.0",
-    "@test-runner/oneline-view": "^0.1.4",
-    "@test-runner/tom": "^0.8.1",
+    "@test-runner/live-view": "^0.2.1",
+    "@test-runner/oneline-view": "^0.2.0",
+    "@test-runner/tom": "^0.9.1",
     "command-line-args": "^5.2.0",
     "command-line-usage": "^6.1.1",
     "current-module-paths": "^1.1.0",
@@ -55,9 +55,9 @@
     "walk-back": "^5.1.0"
   },
   "devDependencies": {
-    "jsdoc-to-markdown": "^7.0.1",
-    "node-fetch": "^3.0.0",
-    "rollup": "^2.58.0"
+    "jsdoc-to-markdown": "^7.1.0",
+    "node-fetch": "^3.1.0",
+    "rollup": "^2.64.0"
   },
   "standard": {
     "ignore": [
