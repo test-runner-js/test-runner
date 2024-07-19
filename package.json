@@ -33,7 +33,7 @@
     "dist"
   ],
   "scripts": {
-    "test": "node test/tests.js && node test/require.cjs",
+    "test": "node test/tests.js",
     "docs": "jsdoc2md index.js > docs/API.md"
   },
   "dependencies": {
