@@ -2,7 +2,7 @@ import { loadModuleResolvedFrom, loadModuleRelativeTo } from 'load-module'
 import commandLineArgs from 'command-line-args'
 import commandLineUsage from 'command-line-usage'
 import path from 'path'
-import FileSet from 'file-set'
+import fastGlob from 'fast-glob'
 import walkBack from 'walk-back'
 import Tom from '@test-runner/tom'
 import TestRunnerCore from '@test-runner/core'
@@ -181,15 +181,9 @@ class TestRunnerCli {
 
   async expandGlobs (globs) {
     const result = new Set()
-    for (const glob of globs) {
-      const fileSet = new FileSet()
-      await fileSet.add(glob)
-      if (fileSet.notExisting.length) {
-        throw new Error('These files do not exist: ' + fileSet.notExisting.join(', '))
-      }
-      for (const file of fileSet.files) {
-        result.add(file)
-      }
+    const files = await fastGlob(globs, { onlyFiles: true })
+    for (const file of files) {
+      result.add(file)
     }
     return Array.from(result.values())
   }
@@ -205,6 +199,7 @@ class TestRunnerCli {
     return name
   }
 
+  /* TODO: Move this logic within Core making it default for test-runner-nature too. UNLESS isomorphism is required in Core. */
   async getTom (files, options) {
     const toms = []
     for (const file of files) {

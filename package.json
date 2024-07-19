@@ -8,10 +8,7 @@
   },
   "repository": "https://github.com/test-runner-js/test-runner",
   "type": "module",
-  "exports": {
-    "import": "./index.js",
-    "require": "./dist/index.cjs"
-  },
+  "exports": "./index.js",
   "keywords": [
     "test-runner",
     "test",
@@ -36,10 +33,8 @@
     "dist"
   ],
   "scripts": {
-    "test": "npm run dist && npm run test:ci",
-    "test:ci": "node test/tests.js && node test/require.cjs",
-    "docs": "jsdoc2md index.js > docs/API.md",
-    "dist": "rollup -c"
+    "test": "node test/tests.js && node test/require.cjs",
+    "docs": "jsdoc2md index.js > docs/API.md"
   },
   "dependencies": {
     "@test-runner/core": "^0.10.0",
@@ -47,17 +42,16 @@
     "@test-runner/live-view": "^0.2.1",
     "@test-runner/oneline-view": "^0.2.0",
     "@test-runner/tom": "^0.9.1",
-    "command-line-args": "^5.2.0",
-    "command-line-usage": "^6.1.1",
-    "current-module-paths": "^1.1.0",
-    "file-set": "^5.1.2",
+    "command-line-args": "^6.0.0",
+    "command-line-usage": "^7.0.3",
+    "current-module-paths": "^1.1.1",
+    "fast-glob": "^3.3.2",
     "load-module": "^4.2.1",
     "walk-back": "^5.1.0"
   },
   "devDependencies": {
-    "jsdoc-to-markdown": "^7.1.0",
-    "node-fetch": "^3.1.0",
-    "rollup": "^2.64.0"
+    "jsdoc-to-markdown": "^8.0.1",
+    "node-fetch": "^3.3.2"
   },
   "standard": {
     "ignore": [
