@@ -111,22 +111,20 @@ const a = assert.strict
     .catch(halt)
 }
 
-/* TODO: rethink how to handle non-existant files not FileSet is gone */
-
-// { /* TOM file doesn't exist */
-//   class TestRunnerTest extends TestRunnerCli {
-//     async getOptions () {
-//       const commandLineArgs = await this.loadModule('command-line-args')
-//       return commandLineArgs(this.optionDefinitions, { argv: ['broken', '--silent'] })
-//     }
-//   }
-//   const cli = new TestRunnerTest()
-//   cli.start()
-//     .then(runner => {
-//       throw new Error('should not reach here')
-//     })
-//     .catch(err => {
-//       a.ok(/These files do not exist: broken/i.test(err.message))
-//     })
-//     .catch(halt)
-// }
+{ /* TOM file doesn't exist */
+  class TestRunnerTest extends TestRunnerCli {
+    async getOptions () {
+      const commandLineArgs = await this.loadModule('command-line-args')
+      return commandLineArgs(this.optionDefinitions, { argv: ['broken', '--silent'] })
+    }
+  }
+  const actuals = []
+  const cli = new TestRunnerTest({
+    errorLog: msg => actuals.push(msg)
+  })
+  cli.start()
+    .then(runner => {
+      a.ok(/one or more input files required/i.test(actuals[0]))
+    })
+    .catch(halt)
+}
