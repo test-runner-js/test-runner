@@ -2,7 +2,7 @@
   "name": "test-runner",
   "author": "Lloyd Brookes <75pound@gmail.com>",
   "version": "0.11.0",
-  "description": "Fully-featured, lightweight command-line test runner",
+  "description": "Minimal, isomorphic test runner",
   "bin": {
     "test-runner": "bin/cli.js"
   },
@@ -20,7 +20,8 @@
     "tape",
     "tap",
     "ava",
-    "mocha"
+    "mocha",
+    "jest"
   ],
   "license": "MIT",
   "engines": {
@@ -28,34 +29,16 @@
   },
   "files": [
     "bin",
-    "lib",
-    "index.js",
-    "dist"
+    "index.js"
   ],
   "scripts": {
-    "test": "node test/tests.js",
-    "docs": "jsdoc2md index.js > docs/API.md"
+    "test": "node test/tests.js"
   },
   "dependencies": {
-    "@test-runner/core": "^0.10.0",
-    "@test-runner/default-view": "^0.6.1",
-    "@test-runner/live-view": "^0.2.1",
-    "@test-runner/oneline-view": "^0.2.0",
-    "@test-runner/tom": "^0.9.1",
-    "command-line-args": "^6.0.0",
-    "command-line-usage": "^7.0.3",
-    "current-module-paths": "^1.1.1",
-    "fast-glob": "^3.3.2",
-    "load-module": "^4.2.1",
-    "walk-back": "^5.1.0"
-  },
-  "devDependencies": {
-    "jsdoc-to-markdown": "^8.0.1",
-    "node-fetch": "^3.3.2"
+    "nature": "^0.6.2"
   },
   "standard": {
     "ignore": [
-      "dist",
       "tmp"
     ],
     "envs": []
