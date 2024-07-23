@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import TestRunner from 'test-runner'
+import path from 'path'
 
 process.on('uncaughtException', (err, origin) => {
   console.error(`\nAn ${origin} was thrown, possibly in a separate tick.\n`)
@@ -31,23 +33,11 @@ for (const file of config.files) {
   addMap(onlyMaps, testModule.only)
 }
 
-if (onlyMaps.length) {
-  for (const onlyMap of onlyMaps) {
-    for (const [name, testFn] of onlyMap) {
-      await testFn()
-      console.log(`✔ ${name}`)
-    }
-  }
-} else {
-  for (const skipMap of skipMaps) {
-    for (const [name] of skipMap) {
-      console.log(`- ${name}`)
-    }
-  }
-  for (const testMap of testMaps) {
-    for (const [name, testFn] of testMap) {
-      await testFn()
-      console.log(`✔ ${name}`)
-    }
+const runner = new TestRunner()
+for await (const result of runner.results(testMaps, skipMaps, onlyMaps)) {
+  if (result.skipped) {
+    console.log(`- ${result.name}`)
+  } else {
+    console.log(`✔ ${result.name}`)
   }
 }
