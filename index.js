@@ -1,33 +1,34 @@
 class TestRunner {
-  async * results (testMaps = [], skipMaps = [], onlyMaps = []) {
-    if (onlyMaps.length) {
-      for (const onlyMap of onlyMaps) {
-        for (const [name, testFn] of onlyMap) {
-          yield {
-            name,
-            result: await testFn()
-          }
-        }
-      }
-    } else {
-      for (const skipMap of skipMaps) {
-        for (const [name] of skipMap) {
-          yield {
-            name,
-            skipped: true
-          }
-        }
-      }
-      for (const testMap of testMaps) {
-        for (const [name, testFn] of testMap) {
-          yield {
-            name,
-            result: await testFn()
-          }
-        }
-      }
+  tests
+
+  constructor (tests = []) {
+    this.tests = tests
+  }
+
+  async * run () {
+    for (const test of this.tests) {
+      await test.run()
+      yield test
     }
   }
 }
 
 export default TestRunner
+
+/*
+- return an EventEmitter from test files.. enables test suite to emit progress, performance, state etc information to the runner UI.
+- test other people's projects
+- interchangeable iterators, what else can be interchanged?
+- Runner has no concept of "skip", if you want to skip a test don't pass it in - same could apply to only
+
+- TestSuite/TestRunner
+  - states: pending, passed, failed
+  - properties: test, skip and only maps, testIterator, logger,
+  - behaviours: run()
+
+# Interchange object to get data from the user into the Runner. Neither the Tests nor Runner need to have any concept of where the tests originated from (files, API etc)
+- TestMap
+  - collection: <test metadata, test Fn> pairs
+  - properties: metadata (file source etc)
+
+*/

@@ -1,43 +1,47 @@
 #!/usr/bin/env node
 import TestRunner from 'test-runner'
 import path from 'path'
+import Test from '../lib/test.js'
 
-process.on('uncaughtException', (err, origin) => {
-  console.error(`\nAn ${origin} was thrown, possibly in a separate tick.\n`)
-  console.error(err)
-  process.exit(1)
-})
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('\nAn unhandledRejection was thrown. Please ensure the rejecting promise is returned from the test function.\n')
-  console.error(reason)
-  process.exit(1)
-})
+// process.on('uncaughtException', (err, origin) => {
+//   console.error(`\nAn ${origin} was thrown, possibly in a separate tick.\n`)
+//   console.error(err)
+//   process.exit(1)
+// })
+// process.on('unhandledRejection', (reason, promise) => {
+//   console.error('\nAn unhandledRejection was thrown. Please ensure the rejecting promise is returned from the test function.\n')
+//   console.error(reason)
+//   process.exit(1)
+// })
 
 const config = {
   files: process.argv.slice(2)
 }
-const testMaps = []
-const skipMaps = []
-const onlyMaps = []
+const tests = []
 
-function addMap (arr, map) {
-  if (map && map.size) {
-    arr.push(map)
+function createTests (arr, map, file) {
+  for (const [name, testFn] of map) {
+    const test = new Test(name, testFn)
+    test.data.file = file
+    tests.push(test)
   }
 }
 
 for (const file of config.files) {
   const testModule = await import(path.resolve(file))
-  addMap(testMaps, testModule.test)
-  addMap(skipMaps, testModule.skip)
-  addMap(onlyMaps, testModule.only)
+  if (testModule?.skip?.size) {
+    for (const [name] of testModule.skip) {
+      console.log(`- ${name}`)
+    }
+  }
+  if (testModule?.only?.size) {
+    createTests(tests, testModule.only, file)
+  } else if (testModule?.test?.size) {
+    createTests(tests, testModule.test, file)
+  }
 }
 
-const runner = new TestRunner()
-for await (const result of runner.results(testMaps, skipMaps, onlyMaps)) {
-  if (result.skipped) {
-    console.log(`- ${result.name}`)
-  } else {
-    console.log(`✔ ${result.name}`)
-  }
+const runner = new TestRunner(tests)
+for await (const test of runner.run()) {
+  console.log(`✔ ${test.data.file}: ${test.name}`)
 }
