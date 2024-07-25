@@ -34,13 +34,13 @@
   "scripts": {
     "test": "node test/tests.js"
   },
-  "dependencies": {
-    "nature": "^0.6.2"
-  },
   "standard": {
     "ignore": [
       "tmp"
     ],
     "envs": []
+  },
+  "dependencies": {
+    "ansi-escape-sequences": "^6.2.2"
   }
 }

@@ -2,6 +2,7 @@
 import TestRunner from 'test-runner'
 import path from 'path'
 import Test from '../lib/test.js'
+import ansi from 'ansi-escape-sequences'
 
 // process.on('uncaughtException', (err, origin) => {
 //   console.error(`\nAn ${origin} was thrown, possibly in a separate tick.\n`)
@@ -31,7 +32,7 @@ for (const file of config.files) {
   const testModule = await import(path.resolve(file))
   if (testModule?.skip?.size) {
     for (const [name] of testModule.skip) {
-      console.log(`- ${name}`)
+      console.log(`- ${ansi.format(name, ['grey'])}`)
     }
   }
   if (testModule?.only?.size) {
@@ -43,5 +44,5 @@ for (const file of config.files) {
 
 const runner = new TestRunner(tests)
 for await (const test of runner.run()) {
-  console.log(`✔ ${test.data.file}: ${test.name}`)
+  console.log(`${ansi.format('✔', ['green'])} ${ansi.format(test.data.file, ['magenta'])} ${test.name}`)
 }
