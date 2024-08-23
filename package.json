@@ -32,7 +32,7 @@
     "index.js"
   ],
   "scripts": {
-    "test": "node test/tests.js"
+    "test": "node test/test.js"
   },
   "standard": {
     "ignore": [

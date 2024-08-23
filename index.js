@@ -11,6 +11,14 @@ class TestRunner {
       yield test
     }
   }
+
+  async runAll () {
+    const result = []
+    for await (const test of this.run()) {
+      result.push(test)
+    }
+    return result
+  }
 }
 
 export default TestRunner
