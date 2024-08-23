@@ -2,10 +2,6 @@ import TestRunner from 'test-runner'
 import Test from '../lib/test.js'
 import Cli from '../lib/cli.js'
 import { strict as a } from 'assert'
-import path from 'node:path'
-import currentModulePaths from 'current-module-paths'
-
-const { __dirname } = currentModulePaths(import.meta.url)
 
 /* Node.js version 12 compatible - no module-level await. */
 
@@ -25,8 +21,7 @@ one()
 
 /* Cli loads and runs a test file */
 async function cli () {
-  const actuals = []
   const cli = new Cli()
-  const runner = await cli.start([path.resolve(__dirname, 'fixture', 'one.js')])
+  await cli.start(['./test/fixture/one.js'])
 }
 cli()
