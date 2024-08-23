@@ -6,7 +6,10 @@
   "bin": {
     "test-runner": "bin/cli.js"
   },
-  "repository": "https://github.com/test-runner-js/test-runner",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/test-runner-js/test-runner.git"
+  },
   "type": "module",
   "exports": "./index.js",
   "keywords": [
@@ -29,6 +32,7 @@
   },
   "files": [
     "bin",
+    "lib",
     "index.js"
   ],
   "scripts": {
