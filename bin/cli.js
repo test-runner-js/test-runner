@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import Cli from '../lib/cli.js'
+import TestRunner from 'test-runner'
 
-const cli = new Cli()
-cli.start(process.argv.slice(2))
+const runner = new TestRunner()
+runner.start(process.argv.slice(2))

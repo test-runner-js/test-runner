@@ -1,6 +1,5 @@
 import TestRunner from 'test-runner'
 import Test from '../lib/test.js'
-import Cli from '../lib/cli.js'
 import { strict as a } from 'assert'
 
 /* Node.js version 12 compatible - no module-level await. */
@@ -21,7 +20,7 @@ one()
 
 /* Cli loads and runs a test file */
 async function cli () {
-  const cli = new Cli()
-  await cli.start(['./test/fixture/one.js'])
+  const runner = new TestRunner()
+  await runner.start(['./test/fixture/one.js'])
 }
 cli()
