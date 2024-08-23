@@ -45,6 +45,7 @@
     "envs": []
   },
   "dependencies": {
-    "ansi-escape-sequences": "^6.2.2"
+    "ansi-escape-sequences": "^6.2.2",
+    "current-module-paths": "^1.1.1"
   }
 }
