@@ -1,6 +1,17 @@
 import Test from './lib/test.js'
 import ansi from 'ansi-escape-sequences'
 import { pathToFileURL } from 'node:url'
+import os from 'node:os'
+import util from 'node:util'
+
+/* TODO: Factor out node-specific code */
+
+function indent (input, indentWith) {
+  const lines = input.split(os.EOL).map(line => {
+    return indentWith + line
+  })
+  return lines.join(os.EOL)
+}
 
 class TestRunner {
   tests
@@ -30,7 +41,7 @@ class TestRunner {
     function createTests (arr, map, file) {
       for (const [name, testFn] of map) {
         const test = new Test(name, testFn)
-        test.data.file = file
+        test.metadata.file = file
         tests.push(test)
       }
     }
@@ -55,7 +66,10 @@ class TestRunner {
 
     this.tests = tests
     for await (const test of this.run()) {
-      console.log(`${ansi.format('✔', ['green'])} ${ansi.format(test.data.file, ['magenta'])} ${test.name}`)
+      console.log(`${ansi.format('✔', ['green'])} ${ansi.format(test.metadata.file, ['magenta'])} ${test.name}`)
+      if (test.data) {
+        console.log(indent(os.EOL + util.inspect(test.data, { colors: true }) + os.EOL, '  '))
+      }
     }
   }
 }
