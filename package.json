@@ -1,7 +1,7 @@
 {
   "name": "test-runner",
   "author": "Lloyd Brookes <75pound@gmail.com>",
-  "version": "0.12.0-3",
+  "version": "0.12.0-4",
   "description": "Minimal, isomorphic test runner",
   "bin": {
     "test-runner": "bin/cli.js"
