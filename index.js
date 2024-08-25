@@ -4,7 +4,7 @@ import { pathToFileURL } from 'node:url'
 import os from 'node:os'
 import util from 'node:util'
 
-/* TODO: Factor out node-specific code */
+/* TODO: Factor out node-specific code to enable isomorphism */
 
 function indent (input, indentWith) {
   const lines = input.split(os.EOL).map(line => {
@@ -22,6 +22,7 @@ class TestRunner {
 
   async * run () {
     for (const test of this.tests) {
+      console.log(`${ansi.format('●', ['yellow'])} ${ansi.format(test.metadata.file, ['magenta'])} ${test.name}`)
       await test.run()
       yield test
     }
@@ -38,6 +39,17 @@ class TestRunner {
   async start (files) {
     const tests = []
     const only = []
+
+    process.on('uncaughtException', (err, origin) => {
+      console.error(`\nAn ${origin} was thrown, possibly in a separate tick.\n`)
+      console.error(err)
+      process.exit(1)
+    })
+    process.on('unhandledRejection', (reason, promise) => {
+      console.error('\nAn unhandledRejection was thrown. Please ensure the rejecting promise is returned from the test function.\n')
+      console.error(reason)
+      process.exit(1)
+    })
 
     function createTests (arr, map, file) {
       for (const [name, testFn] of map) {
@@ -67,6 +79,7 @@ class TestRunner {
 
     this.tests = only.length ? only : tests
     for await (const test of this.run()) {
+      process.stdout.write(ansi.cursor.up(1) + ansi.erase.inLine(2))
       console.log(`${ansi.format('✔', ['green'])} ${ansi.format(test.metadata.file, ['magenta'])} ${test.name}`)
       if (test.data) {
         console.log(indent(os.EOL + util.inspect(test.data, { colors: true }) + os.EOL, '  '))
