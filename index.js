@@ -37,12 +37,13 @@ class TestRunner {
 
   async start (files) {
     const tests = []
+    const only = []
 
     function createTests (arr, map, file) {
       for (const [name, testFn] of map) {
         const test = new Test(name, testFn)
         test.metadata.file = file
-        tests.push(test)
+        arr.push(test)
       }
     }
 
@@ -58,13 +59,13 @@ class TestRunner {
         }
       }
       if (testModule.only && testModule.only.size) {
-        createTests(tests, testModule.only, file)
+        createTests(only, testModule.only, file)
       } else if (testModule.test && testModule.test.size) {
         createTests(tests, testModule.test, file)
       }
     }
 
-    this.tests = tests
+    this.tests = only.length ? only : tests
     for await (const test of this.run()) {
       console.log(`${ansi.format('✔', ['green'])} ${ansi.format(test.metadata.file, ['magenta'])} ${test.name}`)
       if (test.data) {
