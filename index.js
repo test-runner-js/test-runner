@@ -41,11 +41,11 @@ class TestRunner {
 
   async * run () {
     for (const test of this.tests) {
-      console.log(`${ansi.format(test.metadata?.file || '', ['magenta'])} ${test.name}`)
+      console.log(`${ansi.format(test.metadata.file || '', ['magenta'])} ${test.name}`)
       try {
         await test.run()
       } catch (err) {
-        console.log(`${ansi.format(test.metadata?.file || '', ['magenta'])} ${test.name} - ${ansi.format('Failed', ['red'])}`)
+        console.log(`${ansi.format(test.metadata.file || '', ['magenta'])} ${test.name} - ${ansi.format('Failed', ['red'])}`)
         /* Crash the process */
         throw err
       }
