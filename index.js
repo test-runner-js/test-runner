@@ -22,9 +22,15 @@ class TestRunner {
 
   async * run () {
     for (const test of this.tests) {
-      console.log(`${ansi.format('●', ['yellow'])} ${ansi.format(test.metadata.file, ['magenta'])} ${test.name}`)
-      await test.run()
-      yield test
+      console.log(`${ansi.format(test.metadata.file, ['magenta'])} ${test.name}`)
+      try {
+        await test.run()
+      } catch (err) {
+        console.error(err)
+        console.log(`${ansi.format(test.metadata.file, ['magenta'])} ${test.name} - ${ansi.format('Failed', ['red'])}`)
+      } finally {
+        yield test
+      }
     }
   }
 
@@ -79,8 +85,6 @@ class TestRunner {
 
     this.tests = only.length ? only : tests
     for await (const test of this.run()) {
-      process.stdout.write(ansi.cursor.up(1) + ansi.erase.inLine(2))
-      console.log(`${ansi.format('✔', ['green'])} ${ansi.format(test.metadata.file, ['magenta'])} ${test.name}`)
       if (test.data) {
         console.log(indent(os.EOL + util.inspect(test.data, { colors: true }) + os.EOL, '  '))
       }
