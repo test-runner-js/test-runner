@@ -13,6 +13,25 @@ function indent (input, indentWith) {
   return lines.join(os.EOL)
 }
 
+function createTests (arr, map, file) {
+  for (const [name, testFn] of map) {
+    const test = new Test(name, testFn)
+    test.metadata.file = file
+    arr.push(test)
+  }
+}
+
+process.on('uncaughtException', (err, origin) => {
+  console.error(`\nAn ${origin} was thrown, possibly in a separate tick.\n`)
+  console.error(err)
+  process.exit(1)
+})
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('\nAn unhandledRejection was thrown. Please ensure the rejecting promise is returned from the test function.\n')
+  console.error(reason)
+  process.exit(1)
+})
+
 class TestRunner {
   tests
 
@@ -22,14 +41,13 @@ class TestRunner {
 
   async * run () {
     for (const test of this.tests) {
-      console.log(`${ansi.format(test.metadata.file, ['magenta'])} ${test.name}`)
+      console.log(`${ansi.format(test.metadata?.file || '', ['magenta'])} ${test.name}`)
       try {
         await test.run()
       } catch (err) {
-        console.error(err)
-        console.log(`${ansi.format(test.metadata.file, ['magenta'])} ${test.name} - ${ansi.format('Failed', ['red'])}`)
-      } finally {
-        yield test
+        console.log(`${ansi.format(test.metadata?.file || '', ['magenta'])} ${test.name} - ${ansi.format('Failed', ['red'])}`)
+        /* Crash the process */
+        throw err
       }
     }
   }
@@ -45,25 +63,6 @@ class TestRunner {
   async start (files) {
     const tests = []
     const only = []
-
-    process.on('uncaughtException', (err, origin) => {
-      console.error(`\nAn ${origin} was thrown, possibly in a separate tick.\n`)
-      console.error(err)
-      process.exit(1)
-    })
-    process.on('unhandledRejection', (reason, promise) => {
-      console.error('\nAn unhandledRejection was thrown. Please ensure the rejecting promise is returned from the test function.\n')
-      console.error(reason)
-      process.exit(1)
-    })
-
-    function createTests (arr, map, file) {
-      for (const [name, testFn] of map) {
-        const test = new Test(name, testFn)
-        test.metadata.file = file
-        arr.push(test)
-      }
-    }
 
     for (const file of files) {
       const importPath = pathToFileURL(file).href

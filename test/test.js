@@ -18,11 +18,25 @@ async function one () {
 }
 one()
 
+/* Async test passes, storing the result */
+async function onea () {
+  const actuals = []
+  const test1 = new Test('onea', async function onea () {
+    actuals.push('one')
+    return 'one'
+  })
+  const runner = new TestRunner([test1])
+  await runner.runAll()
+  a.equal(test1.result, 'one')
+  a.deepEqual(actuals, ['one'])
+}
+onea()
+
 /* Sync test fails, crashing the process */
 async function syncFail () {
   const actuals = []
-  const test1 = new Test('one', function one () {
-    actuals.push('one')
+  const test1 = new Test('syncFail', function syncFail () {
+    actuals.push('syncFail')
     throw new Error('broken')
   })
   const runner = new TestRunner([test1])
@@ -32,7 +46,7 @@ async function syncFail () {
   } catch (err) {
     a.equal(err.message, 'broken')
     a.equal(test1.result, undefined)
-    a.deepEqual(actuals, ['one'])
+    a.deepEqual(actuals, ['syncFail'])
   }
 }
 syncFail()
