@@ -3,6 +3,7 @@ import ansi from 'ansi-escape-sequences'
 import { pathToFileURL } from 'node:url'
 import os from 'node:os'
 import util from 'node:util'
+import { promises as fs } from 'node:fs'
 
 /* TODO: Factor out node-specific code to enable isomorphism */
 
@@ -24,12 +25,14 @@ function createTests (arr, map, file) {
 process.on('uncaughtException', (err, origin) => {
   console.error(`\nAn ${origin} was thrown, possibly in a separate tick.\n`)
   console.error(err)
-  process.exit(1)
+  /* Need to explicity set a non-zero exitCode */
+  process.exitCode = 1
 })
 process.on('unhandledRejection', (reason, promise) => {
   console.error('\nAn unhandledRejection was thrown. Please ensure the rejecting promise is returned from the test function.\n')
   console.error(reason)
-  process.exit(1)
+  /* Need to explicity set a non-zero exitCode */
+  process.exitCode = 1
 })
 
 class TestRunner {
@@ -65,6 +68,11 @@ class TestRunner {
     const only = []
 
     for (const file of files) {
+      const stats = await fs.stat(file)
+      if (!stats.isFile()) {
+        console.warn(`Not a file: ${file}`)
+        continue
+      }
       const importPath = pathToFileURL(file).href
       const testModule = await import(importPath)
       if (!testModule) {
