@@ -47,6 +47,8 @@ async function syncFail () {
     a.equal(err.message, 'broken')
     a.equal(test1.result, undefined)
     a.deepEqual(actuals, ['syncFail'])
+    a.equal(process.exitCode, 1)
+    process.exitCode = 0
   }
 }
 syncFail()
@@ -64,5 +66,7 @@ syncFail()
     })
     .catch(err => {
       a.equal(err.message, 'broken')
+      a.equal(process.exitCode, 1)
+      process.exitCode = 0
     })
 }

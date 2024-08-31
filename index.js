@@ -51,6 +51,7 @@ class TestRunner {
       } catch (err) {
         console.log(`${ansi.format(test.metadata.file || '', ['magenta'])} ${test.name} - ${ansi.format('Failed', ['red'])}`)
         /* Crash the process */
+        process.exitCode = 1
         throw err
       }
     }
