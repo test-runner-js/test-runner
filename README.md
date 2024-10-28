@@ -122,4 +122,4 @@ Please see [the wiki](https://github.com/test-runner-js/test-runner/wiki) for mo
 
 * * *
 
-&copy; 2016-24 Lloyd Brookes \<75pound@gmail.com\>.
+&copy; 2016-24 Lloyd Brookes \<opensource@75lb.com\>.

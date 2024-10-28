@@ -1,6 +1,6 @@
 {
   "name": "test-runner",
-  "author": "Lloyd Brookes <75pound@gmail.com>",
+  "author": "Lloyd Brookes <opensource@75lb.com>",
   "version": "0.11.0",
   "description": "Fully-featured, lightweight command-line test runner",
   "bin": {
