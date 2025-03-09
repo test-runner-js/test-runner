@@ -63,8 +63,17 @@ class TestRunner extends TestRunnerCore {
     }
 
     this.tests = only.length ? only : tests
+    for (const test of this.tests) {
+      this.add(test)
+    }
 
-    for await (const test of this.run()) {
+    for await (const test of this) {
+      console.log(`${ansi.format(test.metadata.file || '', ['magenta'])} ${test.name}`)
+      if (test.err) {
+        console.log(`${ansi.format(test.metadata.file || '', ['magenta'])} ${test.name} - ${ansi.format('Failed', ['red'])}`)
+        process.exitCode = 1
+        console.error(test.err)
+      }
       if (test.data) {
         console.log(indent(os.EOL + util.inspect(test.data, { colors: true }) + os.EOL, '  '))
       }

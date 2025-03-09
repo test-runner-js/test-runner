@@ -1,6 +1,6 @@
 {
   "name": "test-runner",
-  "author": "Lloyd Brookes <75pound@gmail.com>",
+  "author": "Lloyd Brookes <opensource@75lb.com>",
   "version": "0.12.0-8",
   "description": "Minimal, isomorphic test runner",
   "bin": {
@@ -36,7 +36,7 @@
     "index.js"
   ],
   "scripts": {
-    "test": "node test/test.js && node test/cli.js"
+    "test": "node test/core.js && node test/cli.js"
   },
   "standard": {
     "ignore": [
@@ -45,6 +45,7 @@
     "envs": []
   },
   "dependencies": {
-    "ansi-escape-sequences": "^6.2.2"
+    "ansi-escape-sequences": "^6.2.2",
+    "work": "^0.11.0"
   }
 }

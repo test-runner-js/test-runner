@@ -11,4 +11,4 @@
 
 * * *
 
-&copy; 2016-24 Lloyd Brookes \<75pound@gmail.com\>.
+&copy; 2016-25 Lloyd Brookes \<opensource@75lb.com\>.
