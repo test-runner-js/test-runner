@@ -74,7 +74,7 @@ class TestRunner extends TestRunnerCore {
         process.exitCode = 1
         console.error(test.err)
       }
-      if (test.data) {
+      if (typeof test.data !== 'undefined') {
         console.log(indent(os.EOL + util.inspect(test.data, { colors: true }) + os.EOL, '  '))
       }
     }
